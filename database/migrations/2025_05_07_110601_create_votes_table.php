@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('amusement_id');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
         });
     }
 
