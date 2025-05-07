@@ -2,11 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
 
 
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
+
+Route::get('/test', [TestController::class, 'ping']);
 
 Route::post('/tokens/create', function (Request $request) {
 
