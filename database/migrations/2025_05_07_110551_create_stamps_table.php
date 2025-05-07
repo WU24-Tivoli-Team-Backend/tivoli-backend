@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('stamps', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('amusement_id');
+            $table->string('animal');
+            $table->string('premium_attribute')->nullable();
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
         });
     }
 
