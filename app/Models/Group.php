@@ -21,4 +21,11 @@ class Group extends Model
     {
         return $this->hasMany(User::class);
     }
+
+
+    /** The transactions related to the group */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
