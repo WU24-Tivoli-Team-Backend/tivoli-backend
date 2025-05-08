@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('stamps', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('amusement_id');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
             $table->string('animal'); // Change this to enum when we know the animals?
             $table->enum('premium_attribute', ['gold', 'silver', 'platinum'])->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
         });
     }
 
