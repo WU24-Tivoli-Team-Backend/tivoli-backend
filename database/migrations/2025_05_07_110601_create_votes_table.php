@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('amusement_id');
             $table->timestamps();
+
+            $table->unique('user_id'); // One vote per user
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
         });
