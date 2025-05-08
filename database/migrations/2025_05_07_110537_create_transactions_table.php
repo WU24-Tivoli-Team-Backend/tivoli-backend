@@ -13,16 +13,18 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('amusement_id');
-            $table->unsignedInteger('seller_group_id');
-            $table->unsignedInteger('buyer_user_id');
+
+            $table->unsignedInteger('amusement_id')->nullable();
+            $table->unsignedInteger('group_id')->nullable(); // seller
+            $table->unsignedInteger('user_id'); // buyer
+
             $table->decimal('stake_amount', 10, 2)->nullable();
             $table->decimal('payout_amount', 10, 2)->nullable();
             $table->timestamps();
-            // Foreign keys: Do we want them to be set to null or cascade on delete?
+
             $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('set null');
-            $table->foreign('seller_group_id')->references('id')->on('groups')->onDelete('set null');
-            $table->foreign('buyer_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
