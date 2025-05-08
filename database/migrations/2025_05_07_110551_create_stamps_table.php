@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('amusement_id');
-            $table->string('animal');
-            $table->string('premium_attribute')->nullable();
+            $table->string('animal'); // Change this to enum when we know the animals?
+            $table->enum('premium_attribute', ['gold', 'silver', 'platinum'])->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
