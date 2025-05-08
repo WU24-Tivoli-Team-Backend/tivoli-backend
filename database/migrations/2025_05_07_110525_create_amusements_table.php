@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('amusements', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('group_id');
+            $table->foreignId('group_id')->references('id')->on('groups')->onDelete('cascade');
             $table->string('name', 255);
             $table->enum('type', ['attraction', 'game', 'activity']);
             $table->string('description');
             $table->string('image_url', 255);
             $table->string('url', 255);
             $table->timestamps();
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
+            //$table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
         });
     }
 

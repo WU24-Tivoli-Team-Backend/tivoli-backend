@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('amusement_id');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
             $table->timestamps();
 
             $table->unique('user_id'); // One vote per user
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('cascade');
         });
     }
 
