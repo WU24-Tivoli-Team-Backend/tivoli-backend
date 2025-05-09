@@ -19,9 +19,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
         'email',
         'password',
+        'group_id',
+        'balance',
+        'image_url',
+        'github',
+        'url',
     ];
 
     /**
@@ -45,5 +51,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relationships
+    /** A user belongs to a group */
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    /** Transactions related to a user */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /** A user can have multiple stamps */
+    public function stamps()
+    {
+        return $this->hasMany(Stamp::class);
+    }
+
+    /** A user can vote votes */
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
     }
 }
