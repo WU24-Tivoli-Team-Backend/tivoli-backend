@@ -35,9 +35,14 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Group $group)
+    public function show($id)
     {
-        //
+        $group = Group::findOrFail($id);
+
+        return response()->json([
+            'id' => $group->id,
+            'created_at' => $group->created_at,
+        ]);
     }
 
     /**
