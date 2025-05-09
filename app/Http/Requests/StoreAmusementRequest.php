@@ -11,7 +11,7 @@ class StoreAmusementRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class StoreAmusementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'group_id' => 'required|integer|exists:groups,id',
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|in:attraction,game,activity', // Must be one of the defined enum values
+            'description' => 'nullable|string|max:1000',
+            'image_url' => 'nullable|url|max:255',
+            'url' => 'nullable|url|max:255',
         ];
     }
 }
