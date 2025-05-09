@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Models\Group;
+use App\Http\Resources\GroupResource;
+//use App\Models\User;
 
 class GroupController extends Controller
 {
@@ -13,7 +15,9 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+        $groups = Group::with('users')->get();
+    
+        return GroupResource::collection($groups);
     }
 
     /**
@@ -39,10 +43,7 @@ class GroupController extends Controller
     {
         $group = Group::findOrFail($id);
 
-        return response()->json([
-            'id' => $group->id,
-            'created_at' => $group->created_at,
-        ]);
+        return new GroupResource($group);
     }
 
     /**
