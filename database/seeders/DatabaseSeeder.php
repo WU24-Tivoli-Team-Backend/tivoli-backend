@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'created_at' => now(),
         ]);
-        
+
         User::factory()->create([
             'firstname' => 'Rune',
             'lastname' => 'Pandadottir',
@@ -32,5 +32,7 @@ class DatabaseSeeder extends Seeder
             'github' => '',
             'url' => '',
         ]);
+
+        $this->call(AmusementSeeder::class);
     }
 }
