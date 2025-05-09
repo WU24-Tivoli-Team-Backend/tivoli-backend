@@ -15,15 +15,13 @@ class AmusementResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'group_id' => $this->group_id,
+            'id' => $this->id, // Not sure if we want to expose this?
+            'group_id' => $this->group_id, // Not sure if we want to expose this?
             'name' => $this->name,
             'type' => $this->type,
             'description' => $this->description,
             'image_url' => $this->image_url,
             'url' => $this->url,
-            // Relationships
-            'group' => $this->whenLoaded('group'), // Include group data if loaded
             'stamps' => $this->whenLoaded('stamps'), // Include stamps if loaded
 
         ];
