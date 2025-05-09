@@ -24,10 +24,16 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Rune Pandadottir',
+            'firstname' => 'Rune',
+            'lastname' => 'Pandadottir',
             'email' => 'runepandadottir@yrgobanken.vip',
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'group_id' => 1,
+            'balance' => 25,
+            'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
+            'github' => '',
+            'url' => '',
             'remember_token' => Str::random(10),
         ];
     }
