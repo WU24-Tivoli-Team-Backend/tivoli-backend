@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +16,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        Group::factory()->create([
+            'id' => 1,
+            'created_at' => now(),
         ]);
+
+        User::factory()->create([
+            'firstname' => 'Rune',
+            'lastname' => 'Pandadottir',
+            'email' => 'rune@yrgobanken.vip',
+            'password' => bcrypt('password'),
+            'group_id' => 1,
+            'balance' => 25,
+            'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
+            'github' => '',
+            'url' => '',
+        ]);
+
+        $this->call(AmusementSeeder::class);
+
+        $this->call(TransactionSeeder::class);
     }
 }

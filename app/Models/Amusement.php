@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Vote;
 
 class Amusement extends Model
 {
@@ -49,5 +50,4 @@ class Amusement extends Model
     {
         return $this->hasMany(Vote::class);
     }
-
 }
