@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
-    public function ping()
+    public function ping(Request $request)
     {
-        return response()->json([
-            'message' => 'Api works',
+        return response([
+            'message' => 'Thanks for checking out our amazing API, see you soon!',
             'timestamp' => now(),
-        ]);
+            'headers' => 'application/json'
+        ], 200);
     }
+
 }

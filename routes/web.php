@@ -9,8 +9,6 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-Route::get('/test', [TestController::class, 'ping']);
-
 Route::post('/tokens/create', function (Request $request) {
 
     $token = $request->user()->createToken($request->token_name);
