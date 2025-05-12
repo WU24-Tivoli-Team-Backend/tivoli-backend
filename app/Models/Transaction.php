@@ -16,6 +16,7 @@ class Transaction extends Model
         'user_id',
         'stake_amount',
         'payout_amount',
+        'stamp_id'
     ];
 
     protected $casts = [
@@ -42,5 +43,10 @@ class Transaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function stamp()
+    {
+        return $this->hasOne(Stamp::class);
     }
 }
