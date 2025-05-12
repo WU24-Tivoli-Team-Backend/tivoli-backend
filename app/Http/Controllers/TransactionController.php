@@ -6,6 +6,9 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionController extends Controller
 {
@@ -16,11 +19,12 @@ class TransactionController extends Controller
     {
         return response()->json([
             'transaction' => 'Stake and payout are nullable. If you are charging a fee to use an amusement, use stake. If you are paying out winnings, use payout.',
+            'amusement_id' => 'integer',
             'user_id' => 'passed with token',
-            'group_id' => 'string',
+            'group_id' => 'integer',
             'stake_amount' => 'float',
             'payout_amount' => 'float',
-            'stamp' => 'string'
+            'stamp_id' => 'integer'
 
         ]);
     }
@@ -29,7 +33,7 @@ class TransactionController extends Controller
      * Show the form for creating a new resource.
      */
 
-    public function all() 
+    public function all()
     {
         $transactions = Transaction::all();
 
@@ -38,21 +42,27 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(StoreTransactionRequest $request)
     {
-        $validated = $request->validated();
-
-        $transaction = Transaction::create($validated);
-
-        return response()->json(['ok' => true, 'transaction' => $transaction], 201);
+        try {
+            $transaction = Transaction::create($request->validated());
+            return response()->json([
+                'message' => 'Transaction created successfully',
+                'data' => $transaction
+            ], 201);
+            //Varför kommer jag aldrig hit?
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create transaction',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -60,7 +70,14 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        return new TransactionResource(Transaction::findOrFail($id));
+        try {
+            $transaction = Transaction::findOrFail($id);
+            return new TransactionResource($transaction);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'message' => 'Transaction not found',
+            ], 404);
+        }
     }
 
     /**
