@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVoteRequest;
 use App\Http\Requests\UpdateVoteRequest;
 use App\Models\Vote;
+use Illuminate\Support\Facades\DB;
 
 class VoteController extends Controller
 {
@@ -13,7 +14,13 @@ class VoteController extends Controller
      */
     public function index()
     {
-        //
+        $voteCounts = DB::table('votes')
+        ->join('amusements', 'votes.amusement_id', '=', 'amusements.id')
+        ->select('amusements.name as amusement', DB::raw('count(*) as votes'))
+        ->groupBy('amusements.id', 'amusements.name')
+        ->get();
+
+        return $voteCounts->toArray();
     }
 
     /**
@@ -29,7 +36,12 @@ class VoteController extends Controller
      */
     public function store(StoreVoteRequest $request)
     {
-        //
+        $vote = Vote::create($request->validated());
+
+        return response()->json([
+            'message' => 'You have submitted your vote!',
+            'data'    => $vote,
+        ], 201);
     }
 
     /**
@@ -37,7 +49,9 @@ class VoteController extends Controller
      */
     public function show(Vote $vote)
     {
-        //
+        $vote = Vote::findOrFail($vote->id);
+
+        return $vote;
     }
 
     /**
@@ -53,7 +67,12 @@ class VoteController extends Controller
      */
     public function update(UpdateVoteRequest $request, Vote $vote)
     {
-        //
+        $vote->update($request->validated());
+
+        return response()->json([
+            'message' => 'Your vote has been updated successfully!',
+            'data'    => $vote,
+        ], 201);
     }
 
     /**
