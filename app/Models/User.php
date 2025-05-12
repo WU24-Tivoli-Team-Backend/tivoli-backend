@@ -69,7 +69,14 @@ class User extends Authenticatable
     /** A user can have multiple stamps */
     public function stamps()
     {
-        return $this->hasMany(Stamp::class);
+        return $this->belongsToMany(Stamp::class, 'user_stamps')
+                    ->withPivot('amusement_id', 'collected_at')
+                    ->withTimestamps();
+    }
+    
+    public function userStamps()
+    {
+        return $this->hasMany(UserStamp::class);
     }
 
     /** A user can vote votes */

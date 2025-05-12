@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStampRequest;
 use App\Http\Requests\UpdateStampRequest;
 use App\Models\Stamp;
+use App\Http\Resources\StampResource;
 
 class StampController extends Controller
 {
@@ -13,54 +14,58 @@ class StampController extends Controller
      */
     public function index()
     {
-        //
+        $stamps = Stamp::all();
+
+        return StampResource::collection($stamps);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    // /**
+    //  * Show the form for creating a new resource.
+    //  */
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStampRequest $request)
-    {
-        //
-    }
+    // public function store(StoreStampRequest $request)
+    // {
+    //     //
+    // }
 
     /**
      * Display the specified resource.
      */
-    public function show(Stamp $stamp)
+    public function show($id)
     {
-        //
+        $stamp = Stamp::findOrFail($id);
+
+        return new StampResource($stamp);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Stamp $stamp)
-    {
-        //
-    }
+    // public function edit(Stamp $stamp)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStampRequest $request, Stamp $stamp)
-    {
-        //
-    }
+    // public function update(UpdateStampRequest $request, Stamp $stamp)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Stamp $stamp)
-    {
-        //
-    }
+    // public function destroy(Stamp $stamp)
+    // {
+    //     //
+    // }
 }
