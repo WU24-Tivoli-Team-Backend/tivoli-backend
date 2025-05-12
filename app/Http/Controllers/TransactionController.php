@@ -14,6 +14,23 @@ class TransactionController extends Controller
      */
     public function index()
     {
+        return response()->json([
+            'transaction' => 'Stake and payout are nullable. If you are charging a fee to use an amusement, use stake. If you are paying out winnings, use payout.',
+            'user_id' => 'passed with token',
+            'group_id' => 'string',
+            'stake_amount' => 'float',
+            'payout_amount' => 'float',
+            'stamp' => 'string'
+
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+
+    public function all() 
+    {
         $transactions = Transaction::all();
 
         return response()->json([
@@ -21,9 +38,6 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         
@@ -34,9 +48,7 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        $validated = $request->validate(['user_id' => 'required',
-        'group_id' => 'required',
-        'stake_amount' => 'required|numeric']);
+        $validated = $request->validated();
 
         $transaction = Transaction::create($validated);
 

@@ -21,7 +21,11 @@ class StoreTransactionRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return ['user_id' => 'required',
+        'group_id' => 'required',
+        'stake_amount' => 'required|numeric',
+        'payout_amount' => 'required|numeric',
+        'stamp' => 'string'
             
         ];
     }
