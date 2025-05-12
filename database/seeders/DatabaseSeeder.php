@@ -22,8 +22,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'firstname' => 'Rune',
-            'lastname' => 'Pandadottir',
+            'name' => 'Rune Pandadottir',
             'email' => 'rune@yrgobanken.vip',
             'password' => bcrypt('password'),
             'group_id' => 1,
