@@ -17,26 +17,10 @@ Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
 Route::get('/test', [TestController::class, 'ping']);
 
 /** Group API routes */
-Route::prefix('/groups')->group(function () {
-    Route::get('/', [GroupController::class, 'index']);
-    Route::post('/', [GroupController::class, 'store']);
-    Route::get('/{id}', [GroupController::class, 'show']);
-    Route::put('/{id}', [GroupController::class, 'update']);
-    Route::delete('/{id}', [GroupController::class, 'destroy']);
-});
+Route::apiResource('/groups', GroupController::class);
 
 Route::apiResource('amusements', AmusementController::class);
-// Route::get    ('amusements',             [AmusementController::class, 'index']);
-// Route::post   ('amusements',             [AmusementController::class, 'store']);
-// Route::get    ('amusements/{amusement}', [AmusementController::class, 'show']);
-// Route::put    ('amusements/{amusement}', [AmusementController::class, 'update']);
-// Route::delete ('amusements/{amusement}', [AmusementController::class, 'destroy']);
 
 /** Group API routes */
-Route::prefix('/transactions')->group(function () {
-    Route::get('/', [TransactionController::class, 'index']);
-    Route::post('/', [TransactionController::class, 'store']);
-    Route::get('/{id}', [TransactionController::class, 'show']);
-    Route::delete('/{id}', [TransactionController::class, 'destroy']);
-});
+Route::apiResource('/transactions', TransactionController::class);
 
