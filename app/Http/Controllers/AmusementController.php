@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAmusementRequest;
 use App\Http\Requests\UpdateAmusementRequest;
 use App\Models\Amusement;
+use App\Http\Resources\AmusementResource;
+use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Http\JsonResponse;
 
 class AmusementController extends Controller
 {
@@ -13,15 +16,8 @@ class AmusementController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $amusements = Amusement::all();
+        return AmusementResource::collection($amusements);
     }
 
     /**
@@ -29,7 +25,13 @@ class AmusementController extends Controller
      */
     public function store(StoreAmusementRequest $request)
     {
-        //
+        // Validate the request using the StoreAmusementRequest
+        $amusement = Amusement::create($request->validated());
+
+        return response()->json([
+            'message' => 'Amusement created successfully.',
+            'data'    => new AmusementResource($amusement),
+        ], 201);
     }
 
     /**
@@ -37,23 +39,19 @@ class AmusementController extends Controller
      */
     public function show(Amusement $amusement)
     {
-        //
+        return new AmusementResource($amusement);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Amusement $amusement)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateAmusementRequest $request, Amusement $amusement)
     {
-        //
+        $amusement->update($request->validated());
+
+        return (new AmusementResource($amusement))
+            ->additional(['message' => 'Amusement updated successfully.']);
     }
 
     /**
@@ -61,6 +59,10 @@ class AmusementController extends Controller
      */
     public function destroy(Amusement $amusement)
     {
-        //
+        $amusement->delete();
+
+        return response()->json([
+            'message' => 'Amusement deleted',
+        ], 204);
     }
 }
