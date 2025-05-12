@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\AmusementController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StampController;
+use App\Http\Controllers\VoteController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -26,3 +27,5 @@ Route::apiResource('amusements', AmusementController::class);
 Route::apiResource('/transactions', TransactionController::class);
 
 Route::apiResource('/stamps', StampController::class);
+
+Route::apiResource('/votes', VoteController::class);

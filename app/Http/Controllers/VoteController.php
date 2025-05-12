@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVoteRequest;
 use App\Http\Requests\UpdateVoteRequest;
 use App\Models\Vote;
+use App\Http\Resources\VoteResource;
 
 class VoteController extends Controller
 {
@@ -13,7 +14,9 @@ class VoteController extends Controller
      */
     public function index()
     {
-        //
+        $votes = Vote::all();
+
+        return VoteResource::collection($votes);
     }
 
     /**
@@ -29,7 +32,12 @@ class VoteController extends Controller
      */
     public function store(StoreVoteRequest $request)
     {
-        //
+        $vote = Vote::create($request->validated());
+
+        return response()->json([
+            'message' => 'You have submitted your vote!',
+            'data'    => new VoteResource($vote),
+        ], 201);
     }
 
     /**
@@ -37,7 +45,9 @@ class VoteController extends Controller
      */
     public function show(Vote $vote)
     {
-        //
+        $vote = Vote::findOrFail($vote->id);
+
+        return new VoteResource($vote);
     }
 
     /**
