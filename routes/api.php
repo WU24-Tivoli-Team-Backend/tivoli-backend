@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\AmusementController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StampController;
+use App\Http\Middleware\ForceAcceptJson;
 use App\Http\Controllers\VoteController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -23,8 +24,7 @@ Route::apiResource('/groups', GroupController::class);
 
 Route::apiResource('amusements', AmusementController::class);
 
-/** Group API routes */
-Route::apiResource('/transactions', TransactionController::class);
+Route::apiResource('/transactions', TransactionController::class)->middleware('json.accept');
 
 Route::apiResource('/stamps', StampController::class);
 

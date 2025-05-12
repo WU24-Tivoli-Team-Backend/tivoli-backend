@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Group;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -23,18 +24,35 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
+
+        
+        $firstName = $this->faker->firstName;
+        
         return [
             'name' => 'Rune Pandadottir',
             'email' => 'runepandadottir@yrgobanken.vip',
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'group_id' => 1,
-            'balance' => 25,
-            'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
+            'password' => Hash::make('password'), // password
+            'group_id' => function () {
+                // This callback runs when the factory is actually creating the model
+                // ensuring that Group::pluck() is called at the right time
+                $groupIds = Group::pluck('id')->toArray();
+                
+                // If there are no groups yet, create one
+                if (empty($groupIds)) {
+                    return Group::factory()->create()->id;
+                }
+                
+                return $this->faker->randomElement($groupIds);
+            },
+            'balance' => $this->faker->numberBetween(0, 1000),
+            'image_url' => '',
             'github' => '',
             'url' => '',
             'remember_token' => Str::random(10),
         ];
+    
     }
 
     /**

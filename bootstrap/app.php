@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
 
+        $middleware->alias([
+            'json.accept' => \App\Http\Middleware\ForceAcceptJson::class,
+        ]);
+
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {

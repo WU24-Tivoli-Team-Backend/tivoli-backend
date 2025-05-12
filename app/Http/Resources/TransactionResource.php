@@ -15,11 +15,11 @@ class TransactionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'buyer' => $this->user_id, // Renamed user_id to seller
-            'seller' => $this->group_id,
-            'amount' => $this->stake_amount,
-            'amount' => $this->payout_amount,
-            // Add any other fields you need
+            'group' => $this->group_id,
+            'user' => $this->user_id,
+            'amusement' => $this->amusement_id,
+            'stake' => $this->stake_amount,
+            'payout' => $this->payout_amount,
         ];
     }
 }
