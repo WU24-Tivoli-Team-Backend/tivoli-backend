@@ -16,10 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        Group::factory()->create([
-            'id' => 1,
-            'created_at' => now(),
-        ]);
+        $this->call(GroupSeeder::class);
+
+        User::factory()->count(10)->create();
 
         User::factory()->create([
             'name' => 'Rune Pandadottir',

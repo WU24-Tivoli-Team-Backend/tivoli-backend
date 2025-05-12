@@ -17,8 +17,7 @@ class GroupFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => 1,
-            'created_at' => now(),
+            //
         ];
     }
 }
