@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname');
-            $table->string('lastname');
+            $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('group_id')->references('id')->on('groups')->onDelete('cascade')->nullable();
-            $table->decimal('balance', 10, 2)->default(25.00);
-            $table->string('image_url')->nullable();
-            $table->string('github')->nullable();
-            $table->string('url')->nullable();
+            // $table->foreignId('group_id')->references('id')->on('groups')->onDelete('cascade')->nullable();
+            // $table->decimal('balance', 10, 2)->default(25.00);
+            // $table->string('image_url')->nullable();
+            // $table->string('github')->nullable();
+            // $table->string('url')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
