@@ -20,6 +20,7 @@ class Amusement extends Model
         'description',
         'image_url',
         'url',
+        'stamp_id'
     ];
     protected $casts = [
         'created_at' => 'datetime',

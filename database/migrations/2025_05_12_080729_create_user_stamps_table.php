@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stamps', function (Blueprint $table) {
+        Schema::create('user_stamps', function (Blueprint $table) {
             $table->id();
-            $table->enum('animal', ['panda', 'orca', 'raven', 'blobfish', 'pallas cat']); // Change this to enum when we know the animals?
-            $table->enum('premium_attribute', ['silver', 'gold', 'platinum'])->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('stamp_id')->constrained()->onDelete('cascade');
+            $table->foreignId('amusement_id')->nullable()->constrained()->onDelete('set null');
+            $table->timestamp('collected_at')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stamps');
+        Schema::dropIfExists('user_stamps');
     }
 };
