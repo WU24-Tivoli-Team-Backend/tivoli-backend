@@ -30,8 +30,8 @@ class UserFactory extends Factory
         $firstName = $this->faker->firstName;
         
         return [
-            'name' => $firstName . ' ' . $this->faker->lastName,
-            'email' => strtolower($firstName) . '@yrgobanken.vip',
+            'name' => 'Rune Pandadottir',
+            'email' => 'runepandadottir@yrgobanken.vip',
             'email_verified_at' => now(),
             'password' => Hash::make('password'), // password
             'group_id' => function () {
