@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 
 class TransactionController extends Controller
@@ -13,7 +14,11 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        $transactions = Transaction::all();
+
+        return response()->json([
+            'transactions' => TransactionResource::collection($transactions),
+        ]);
     }
 
     /**
@@ -21,7 +26,7 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -29,15 +34,21 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        //
+        $validated = $request->validate(['user_id' => 'required',
+        'group_id' => 'required',
+        'stake_amount' => 'required|numeric']);
+
+        $transaction = Transaction::create($validated);
+
+        return response()->json(['ok' => true, 'transaction' => $transaction], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
+    public function show($id)
     {
-        //
+        return new TransactionResource(Transaction::findOrFail($id));
     }
 
     /**
@@ -59,8 +70,11 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transaction)
+    public function destroy($id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+        $transaction->delete();
+
+        return response()->json(['message' => 'Transaction has been deleted'], 200);
     }
 }
