@@ -16,7 +16,7 @@ class GroupResource extends JsonResource
     {
         $members = $this->users->pluck('email')->toArray();
         $members = $this->users->map(function($user) {
-            return $user->firstname . ' ' . $user->lastname;
+            return $user->name;
         })->toArray();
 
         return [
