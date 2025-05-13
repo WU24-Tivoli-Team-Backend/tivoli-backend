@@ -6,6 +6,7 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Models\Group;
 use App\Http\Resources\GroupResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 //use App\Models\User;
 
 class GroupController extends Controller
@@ -41,9 +42,14 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        $group = Group::findOrFail($id);
-
-        return new GroupResource($group);
+        try {
+            $group = Group::findOrFail($id);
+            return new GroupResource($group);;
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'message' => 'Group not found',
+            ], 404);
+        }
     }
 
     /**
