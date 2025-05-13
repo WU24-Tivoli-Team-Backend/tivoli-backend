@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             // Add group name?
             $table->timestamps();
+            $table->string('api_key');
         });
     }
 

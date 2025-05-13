@@ -11,9 +11,9 @@ class Group extends Model
     use HasFactory;
 
     //Add this if we want to use a group name
-    // protected $fillable = [
-    //     'name',
-    // ];
+    protected $fillable = [
+        'api_key',
+    ];
 
     //Relationships
     /** A group has many members(users) */
