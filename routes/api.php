@@ -10,6 +10,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StampController;
 use App\Http\Middleware\ForceAcceptJson;
 use App\Http\Controllers\VoteController;
+use App\Http\Controllers\UserController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -20,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
 Route::get('/test', [TestController::class, 'ping']);
 
 /** Group API routes */
+Route::apiResource('/users', UserController::class);
+
 Route::apiResource('/groups', GroupController::class);
 
 Route::apiResource('amusements', AmusementController::class);

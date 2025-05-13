@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Group;
 
@@ -35,6 +36,17 @@ class StoreTransactionRequest extends FormRequest
         ];
     }
 
+    public function messages()
+{
+    return [
+        'amusement_id.exists' => 'The selected amusement does not exist.',
+        'user_id.exists' => 'The selected user does not exist.',
+        'group_id.exists' => 'The selected group does not exist.',
+        'stamp_id.exists' => 'The selected stamp does not exist.',
+        'stamp_id.prohibited_if' => 'A stamp cannot be used when stake amount is provided.',
+    ];
+}
+
     /**
      * Configure the validator instance.
      *
@@ -44,6 +56,11 @@ class StoreTransactionRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+
+            if ($validator->errors()->has('user_id') || $validator->errors()->has('group_id') || $validator->errors()->has('amusement_id')) {
+                return;
+            }
+
             // Check if both stake_amount and payout_amount are provided
             if ($this->filled('stake_amount') && $this->filled('payout_amount')) {
                 $validator->errors()->add(
@@ -61,10 +78,19 @@ class StoreTransactionRequest extends FormRequest
                 );
                 return;
             }
+            $user = User::findOrFail($this->user_id); // Use the actual user_id field
+
+            $groupId = Group::findOrFail($this->group_id);
+            $groupUsers = User::where('group_id', $groupId)->get();
+
+            $groupUserCount = count($groupUsers);
 
 
-            $this->whenFilled('stake_amount', function (string $stakeAmount) use ($validator) {
-                $user = User::findOrFail($this->user_id); // Use the actual user_id field
+        
+            //When stake amount is filled out, the following code runs
+            $this->whenFilled('stake_amount', function (string $stakeAmount) use ($validator, $user, $groupUserCount, $groupUsers){
+                Log::info($stakeAmount);
+           
 
                 if ($stakeAmount > $user->balance) {
                     $validator->errors()->add(
@@ -74,14 +100,11 @@ class StoreTransactionRequest extends FormRequest
                     return;
                 }
 
-                $groupId = $this->group_id;
-                Group::findOrFail($groupId);
-                $users = User::where('group_id', $groupId)->get();
 
-                $userCount = count($users);
-                $amountPerUser = $this->stake_amount / $userCount;
+                $amountPerUser = $this->stake_amount / $groupUserCount;
+                Log::info("Stake amount per user to receive: $amountPerUser");
 
-                foreach ($users as $user) {
+                foreach ($groupUsers as $user) {
                     $user->balance += $amountPerUser;
                     $user->save();
                 }
@@ -89,8 +112,11 @@ class StoreTransactionRequest extends FormRequest
 
             });
 
-            $this->whenFilled('group_id', function (string $group) use ($validator) {
+            // When payout amount is filled out, the following code runs
+            $this->whenFilled('payout_amount', function (string $payoutAmount) use ($validator) {
+    
                 $groupId = $this->group_id;
+                Log::info("Group_id: $groupId");
                 Group::findOrFail($groupId);
                 $users = User::where('group_id', $groupId)->get();
 
@@ -98,8 +124,9 @@ class StoreTransactionRequest extends FormRequest
                 foreach ($users as $user) {
                     $groupBalance += $user->balance;
                 }
+                Log::info("Group balance: $groupBalance");
 
-                if ($this->payout_amount > $groupBalance) {
+                if ($payoutAmount > $groupBalance) {
                     $validator->errors()->add(
                         'payout_amount', // Add error to the payout_amount field
                         'Group balance is too low.'
@@ -109,7 +136,8 @@ class StoreTransactionRequest extends FormRequest
 
                 // Calculate amount per user
                 $userCount = count($users);
-                $amountPerUser = $this->payout_amount / $userCount;
+                $amountPerUser = $payoutAmount / $userCount;
+                Log::info("Payout amount to be charged per user: $amountPerUser");
 
                 // Charge each user
                 foreach ($users as $user) {
