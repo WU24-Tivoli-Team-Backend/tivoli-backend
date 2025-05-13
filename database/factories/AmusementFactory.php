@@ -21,7 +21,7 @@ class AmusementFactory extends Factory
 
             'group_id' => 1,
             'name' => $this->faker->name(),
-            'type'  => $this->faker->randomElement(['attraction', 'game', 'activity']),
+            'type'  => $this->faker->randomElement(['attraction', 'game']),
             'description' => $this->faker->text(200),
             'image_url' => $this->faker->imageUrl(640, 480, 'amusement'),
             'url' => $this->faker->url(),
