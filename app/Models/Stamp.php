@@ -20,9 +20,9 @@ class Stamp extends Model
     /** A stamp belongs to a user */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_stamps')
-                    ->withPivot('amusement_id', 'collected_at')
-                    ->withTimestamps();
+        return $this->belongsToMany(User::class, 'user_stamp')
+            ->withPivot('id', 'created_at', 'updated_at')
+            ->withTimestamps();
     }
     
     public function userStamps()
