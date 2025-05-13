@@ -18,10 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        ]);
-
-        $middleware->alias([
             'json.accept' => \App\Http\Middleware\ForceAcceptJson::class,
+            'api.auth' => \App\Http\Middleware\ApiAuthentication::class,
         ]);
 
         //

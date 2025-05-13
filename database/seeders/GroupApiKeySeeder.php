@@ -13,19 +13,23 @@ class GroupApiKeySeeder extends Seeder
      */
     public function run(): void
     {
-        // Gå igenom alla grupper i databasen
-        $groups = Group::all();
-
-        foreach ($groups as $group) {
-            // Radera gamla tokens (frivilligt men rekommenderat)
-            $group->tokens()->delete();
-
-            // Skapa en ny Sanctum-token
-            $token = $group->createToken('Group API Token');
-            $plainTextToken = $token->plainTextToken;
-
-            // Visa i terminal
-            echo "Group ID {$group->id} API Key: {$plainTextToken}\n";
+        $apiKeys = config('api-keys.groups');
+        
+        foreach ($apiKeys as $groupId => $apiKey) {
+            // Find or create the group
+            $group = Group::firstOrCreate(
+                ['id' => $groupId],
+                [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+            
+            // Update the group with the API key
+            $group->update(['api_key' => $apiKey]);
+            
+            // Output the key for reference
+            $this->command->info("Group ID {$group->id} API Key: {$apiKey}");
         }
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Group;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,9 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call(GroupSeeder::class);
+        $this->call(GroupApiKeySeeder::class);
 
         User::factory()->count(10)->create();
 
@@ -32,13 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(AmusementSeeder::class);
-
         $this->call(TransactionSeeder::class);
-
         $this->call(StampSeeder::class);
-
-        $this->call([
-            GroupApiKeySeeder::class,
-        ]);
     }
 }
