@@ -36,5 +36,9 @@ class DatabaseSeeder extends Seeder
         $this->call(TransactionSeeder::class);
 
         $this->call(StampSeeder::class);
+
+        $this->call([
+            GroupApiKeySeeder::class,
+        ]);
     }
 }
