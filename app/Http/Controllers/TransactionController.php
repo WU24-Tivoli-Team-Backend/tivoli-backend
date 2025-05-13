@@ -56,7 +56,6 @@ class TransactionController extends Controller
                 'message' => 'Transaction created successfully',
                 'data' => $transaction
             ], 201);
-            //Varför kommer jag aldrig hit?
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to create transaction',
