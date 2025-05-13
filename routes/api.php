@@ -25,7 +25,7 @@ Route::apiResource('/users', UserController::class);
 
 Route::apiResource('/groups', GroupController::class);
 
-Route::apiResource('amusements', AmusementController::class);
+Route::apiResource('amusements', AmusementController::class)->middleware('json.accept');
 
 Route::apiResource('/transactions', TransactionController::class)->middleware('json.accept');
 

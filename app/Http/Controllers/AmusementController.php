@@ -8,6 +8,7 @@ use App\Models\Amusement;
 use App\Http\Resources\AmusementResource;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AmusementController extends Controller
 {
@@ -27,11 +28,17 @@ class AmusementController extends Controller
     {
         // Validate the request using the StoreAmusementRequest
         $amusement = Amusement::create($request->validated());
-
+        try {
         return response()->json([
             'message' => 'Amusement created successfully.',
             'data'    => new AmusementResource($amusement),
         ], 201);
+    } catch (ModelNotFoundException $exception) {
+        return response()->json([
+            'message' => 'Amusement not created',
+        ], 404);
+
+    }
     }
 
     /**
