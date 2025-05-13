@@ -4,24 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Group extends Model
 {
-    /** @use HasFactory<\Database\Factories\GroupFactory> */
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
-    //Add this if we want to use a group name
-    protected $fillable = [
-        'api_key',
-    ];
-
-    //Relationships
-    /** A group has many members(users) */
+    /** A group has many members (users) */
     public function users()
     {
         return $this->hasMany(User::class);
     }
-
 
     /** The transactions related to the group */
     public function transactions()
