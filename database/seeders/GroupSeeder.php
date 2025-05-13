@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Group;
+use Illuminate\Support\Str; // @todo: temp - remove when real API keys are available
 
 class GroupSeeder extends Seeder
 {
@@ -13,6 +14,59 @@ class GroupSeeder extends Seeder
      */
     public function run(): void
     {
-        Group::factory()->count(10)->create();
+        $predefinedGroups = [
+            [
+                //group 1
+                'api_key' => '123',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 2
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 3
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 4
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 5
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 6
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 7
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                //group 8
+                'api_key' => str::uuid(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ];
+
+        foreach ($predefinedGroups as $group){
+            Group::create($group);
+        }
     }
 }
