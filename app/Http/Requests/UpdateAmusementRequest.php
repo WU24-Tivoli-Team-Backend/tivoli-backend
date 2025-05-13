@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class UpdateAmusementRequest extends FormRequest
 {
@@ -29,5 +31,35 @@ class UpdateAmusementRequest extends FormRequest
             'image_url' => 'sometimes|url|max:255',
             'url' => 'sometimes|url|max:255',
         ];
+    }
+
+    public function messages() {
+        return [
+            'name.required' => 'You need to provide a name',
+            'type.required' => 'You need to enter a type, either attraction or game'
+        ];
+    }
+
+
+       /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->ajax() || $this->wantsJson()) {
+            throw new HttpResponseException(
+                response()->json([
+                    'message' => 'Amusement update failed',
+                    'errors' => $validator->errors()
+                ], 500)
+            );
+        }
+
+        parent::failedValidation($validator);
     }
 }
