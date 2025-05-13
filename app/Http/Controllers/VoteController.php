@@ -14,13 +14,21 @@ class VoteController extends Controller
      */
     public function index()
     {
-        $voteCounts = DB::table('votes')
-        ->join('amusements', 'votes.amusement_id', '=', 'amusements.id')
-        ->select('amusements.name as amusement', DB::raw('count(*) as votes'))
-        ->groupBy('amusements.id', 'amusements.name')
-        ->get();
-
-        return $voteCounts->toArray();
+        try {
+            $voteCounts = DB::table('votes')
+                ->join('amusements', 'votes.amusement_id', '=', 'amusements.id')
+                ->select('amusements.name as amusement', DB::raw('count(*) as votes'))
+                ->groupBy('amusements.id', 'amusements.name')
+                ->get();
+    
+            return response()->json($voteCounts, 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch vote counts',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -36,12 +44,20 @@ class VoteController extends Controller
      */
     public function store(StoreVoteRequest $request)
     {
-        $vote = Vote::create($request->validated());
-
-        return response()->json([
-            'message' => 'You have submitted your vote!',
-            'data'    => $vote,
-        ], 201);
+        try {
+            $vote = Vote::create($request->validated());
+    
+            return response()->json([
+                'message' => 'You have submitted your vote!',
+                'data'    => $vote,
+            ], 201);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to submit vote',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -49,9 +65,22 @@ class VoteController extends Controller
      */
     public function show(Vote $vote)
     {
-        $vote = Vote::findOrFail($vote->id);
-
-        return $vote;
+        try {
+            $foundVote = Vote::findOrFail($vote->id);
+    
+            return response()->json($foundVote, 200);
+    
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Vote not found',
+            ], 404);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve vote',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -67,12 +96,20 @@ class VoteController extends Controller
      */
     public function update(UpdateVoteRequest $request, Vote $vote)
     {
-        $vote->update($request->validated());
-
-        return response()->json([
-            'message' => 'Your vote has been updated successfully!',
-            'data'    => $vote,
-        ], 201);
+        try {
+            $vote->update($request->validated());
+    
+            return response()->json([
+                'message' => 'Your vote has been updated successfully!',
+                'data'    => $vote,
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update vote',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

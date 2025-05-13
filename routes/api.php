@@ -31,4 +31,4 @@ Route::apiResource('/transactions', TransactionController::class)->middleware('j
 
 Route::apiResource('/stamps', StampController::class);
 
-Route::apiResource('/votes', VoteController::class);
+Route::apiResource('/votes', VoteController::class)->middleware('json.accept');
