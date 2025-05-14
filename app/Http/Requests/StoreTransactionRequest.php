@@ -32,7 +32,7 @@ class StoreTransactionRequest extends FormRequest
             'group_id' => 'required|integer|exists:groups,id',
             'stake_amount' => 'nullable|numeric',
             'payout_amount' => 'nullable|numeric',
-            'stamp_id' => 'nullable|string|exists:stamps,id|prohibited_if:stake_amount,!null',
+            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
         ];
     }
 

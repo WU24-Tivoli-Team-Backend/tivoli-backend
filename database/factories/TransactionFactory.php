@@ -28,6 +28,7 @@ class TransactionFactory extends Factory
             'group_id' => $user->group_id,
             'stake_amount' => fake()->numberBetween(1, 5),
             'payout_amount' => fake()->numberBetween(1, 5),
+            'stamp_id' => fake()->randomElement(Amusement::pluck('stamp_id')),
         ];
     }
 }
