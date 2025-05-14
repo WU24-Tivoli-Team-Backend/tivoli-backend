@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('description');
             $table->string('image_url', 255)->nullable();
             $table->string('url', 255)->nullable();
+            $table->foreignId('stamp_id')->nullable()->constrained('stamps')->nullOnDelete();
             $table->timestamps();
-            //$table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
         });
     }
 

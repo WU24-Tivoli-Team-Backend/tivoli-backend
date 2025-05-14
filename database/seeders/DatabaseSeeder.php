@@ -28,8 +28,9 @@ class DatabaseSeeder extends Seeder
             'url' => '',
         ]);
 
+        $this->call(StampSeeder::class);
+
         $this->call(AmusementSeeder::class);
         $this->call(TransactionSeeder::class);
-        $this->call(StampSeeder::class);
     }
 }

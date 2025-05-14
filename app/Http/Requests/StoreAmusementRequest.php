@@ -32,6 +32,7 @@ class StoreAmusementRequest extends FormRequest
             'description' => 'nullable|string|max:1000',
             'image_url' => 'nullable|url|max:255',
             'url' => 'nullable|url|max:255',
+            'stamp_id' => 'nullable|integer|exists:stamps,id',
         ];
     }
 

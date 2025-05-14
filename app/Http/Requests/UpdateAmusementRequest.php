@@ -30,6 +30,7 @@ class UpdateAmusementRequest extends FormRequest
             'description' => 'sometimes|string|max:1000',
             'image_url' => 'sometimes|url|max:255',
             'url' => 'sometimes|url|max:255',
+            'stamp_id' => 'sometimes|integer|exists:stamps,id',
         ];
     }
 

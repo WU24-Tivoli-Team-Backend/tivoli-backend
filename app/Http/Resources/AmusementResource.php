@@ -23,7 +23,7 @@ class AmusementResource extends JsonResource
             'image_url' => $this->image_url,
             'url' => $this->url,
             'stamps' => $this->whenLoaded('stamps'), // Include stamps if loaded
-
+            'stamp_id' => $this->stamp_id,
         ];
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
 
             $table->decimal('stake_amount', 10, 2)->nullable();
             $table->decimal('payout_amount', 10, 2)->nullable();
+            $table->foreignId('stamp_id')->nullable()->references('id')->on('stamps')->onDelete('cascade');
             $table->timestamps();
 
             //$table->foreign('amusement_id')->references('id')->on('amusements')->onDelete('set null');
