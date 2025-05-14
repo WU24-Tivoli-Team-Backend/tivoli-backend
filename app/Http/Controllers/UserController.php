@@ -38,6 +38,18 @@ class UserController extends Controller
             ->additional(['message' => 'User info updated successfully.']);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Amusement deleted',
+        ], 204);
+    }
+
 
     // public function show($id)
     // {
