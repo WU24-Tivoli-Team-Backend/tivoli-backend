@@ -25,11 +25,7 @@ return [
         env('FRONTEND_URL', 'http://localhost:3000') . '/',
         env('FRONTEND_URL', 'http://localhost:3001'),
         rtrim(env('FRONTEND_URL', 'http://localhost:3001'), '/'),
-        env('FRONTEND_URL', 'http://localhost:3001') . '/', 
-        'http://localhost:5173',
-        'http://localhost:5173/'
-
-
+        env('FRONTEND_URL', 'http://localhost:3001') . '/',
     ],
 
     'allowed_origins_patterns' => [],
