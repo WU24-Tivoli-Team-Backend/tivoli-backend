@@ -29,8 +29,6 @@ class StoreTransactionRequest extends FormRequest
     {
         return [
             'amusement_id' => 'required|integer|exists:amusements,id',
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'required|integer|exists:groups,id',
             'stake_amount' => 'nullable|numeric',
             'payout_amount' => 'nullable|numeric',
             'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
@@ -41,8 +39,6 @@ class StoreTransactionRequest extends FormRequest
 {
     return [
         'amusement_id.exists' => 'The selected amusement does not exist.',
-        'user_id.exists' => 'The selected user does not exist.',
-        'group_id.exists' => 'The selected group does not exist.',
         'stamp_id.exists' => 'The selected stamp does not exist.',
         'stamp_id.prohibited_if' => 'A stamp cannot be used when stake amount is provided.',
     ];
@@ -54,129 +50,81 @@ class StoreTransactionRequest extends FormRequest
      * @param \Illuminate\Validation\Validator $validator
      * @return void
      */
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
+   public function withValidator($validator)
+{
+    $validator->after(function ($validator) {
+        $request = app(Request::class);
+        $user = $request->attributes->get('user');
+        $group = $request->attributes->get('group');
+        if ( $validator->errors()->has('amusement_id')) {
+            return;
+        }
+        // Validation checks only - no database updates
+        if ($this->filled('stake_amount') && $this->filled('payout_amount')) {
+            $validator->errors()->add('message', 'You cannot provide both stake_amount and payout_amount.');
+            return;
+        }
 
-            if ($validator->errors()->has('user_id') || $validator->errors()->has('group_id') || $validator->errors()->has('amusement_id')) {
+        if (!$this->filled('stake_amount') && !$this->filled('payout_amount')) {
+            $validator->errors()->add('message', 'You must provide either stake_amount or payout_amount.');
+            return;
+        }
+
+        // Check balances without modifying them
+        $groupUsers = User::where('group_id', $group->id)->get();
+        $groupUserCount = count($groupUsers);
+
+        // When stake amount is provided, validate the user has sufficient balance
+        if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
+            $validator->errors()->add('stake_amount', 'User balance is too low.');
+            return;
+        }
+
+        // When payout amount is provided, validate the group has sufficient balance
+        if ($this->filled('payout_amount')) {
+            $groupBalance = $groupUsers->sum('balance');
+            
+            if ($this->payout_amount > $groupBalance) {
+                $validator->errors()->add('payout_amount', 'Group balance is too low.');
                 return;
             }
 
-            // Check if both stake_amount and payout_amount are provided
-            if ($this->filled('stake_amount') && $this->filled('payout_amount')) {
-                $validator->errors()->add(
-                    'message',
-                    'You cannot provide both stake_amount and payout_amount.'
-                );
+
+        // Check balances without modifying them
+        $groupUsers = User::where('group_id', $group->id)->get();
+        $groupUserCount = count($groupUsers);
+
+        // When stake amount is provided, validate the user has sufficient balance
+        if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
+            $validator->errors()->add('stake_amount', 'User balance is too low.');
+            return;
+        }
+
+        // When payout amount is provided, validate the group has sufficient balance
+        if ($this->filled('payout_amount')) {
+            $groupBalance = $groupUsers->sum('balance');
+            
+            if ($this->payout_amount > $groupBalance) {
+                $validator->errors()->add('payout_amount', 'Group balance is too low.');
                 return;
             }
-
-            // Check if neither stake_amount nor payout_amount is provided
-            if (!$this->filled('stake_amount') && !$this->filled('payout_amount')) {
-                $validator->errors()->add(
-                    'message',
-                    'You must provide either stake_amount or payout_amount.'
-                );
-                return;
-            }
-
-            // Check if the amusements stamp is correct
-            if (!empty($this->stamp_id)) {
-                $amusement = Amusement::find($this->amusement_id);
-
-                if (!$amusement) {
-                    $validator->errors()->add('amusement_id', 'Amusement not found.');
-                    return;
-                }
-
-                if ($amusement->stamp_id !== (int) $this->stamp_id) {
-                    $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement’s stamp.');
-                    return;
-                }
-            }
-
-            $user = User::findOrFail($this->user_id); // Use the actual user_id field
-
-            $groupId = Group::findOrFail($this->group_id);
-            $groupUsers = User::where('group_id', $groupId)->get();
-
-            $groupUserCount = count($groupUsers);
-
-
-        
-            //When stake amount is filled out, the following code runs
-            $this->whenFilled('stake_amount', function (string $stakeAmount) use ($validator, $user, $groupUserCount, $groupUsers){
-                Log::info($stakeAmount);
-           
-
-                if ($stakeAmount > $user->balance) {
+            
+            // Check individual user balances
+            $amountPerUser = $this->payout_amount / $groupUserCount;
+            foreach ($groupUsers as $groupUser) {
+                if ($groupUser->balance < $amountPerUser) {
                     $validator->errors()->add(
-                        'stake_amount', // Add error to the stake_amount field
-                        'User balance is too low.'
+                        'payout_amount', 
+                        "User {$groupUser->name} (ID: {$groupUser->id}) has insufficient balance."
                     );
                     return;
                 }
-
-
-                $amountPerUser = $this->stake_amount / $groupUserCount;
-                Log::info("Stake amount per user to receive: $amountPerUser");
-
-                foreach ($groupUsers as $user) {
-                    $user->balance += $amountPerUser;
-                    $user->save();
-                }
-
-
-            });
-
-            // When payout amount is filled out, the following code runs
-            $this->whenFilled('payout_amount', function (string $payoutAmount) use ($validator) {
-    
-                $groupId = $this->group_id;
-                Log::info("Group_id: $groupId");
-                Group::findOrFail($groupId);
-                $users = User::where('group_id', $groupId)->get();
-
-                $groupBalance = 0;
-                foreach ($users as $user) {
-                    $groupBalance += $user->balance;
-                }
-                Log::info("Group balance: $groupBalance");
-
-                if ($payoutAmount > $groupBalance) {
-                    $validator->errors()->add(
-                        'payout_amount', // Add error to the payout_amount field
-                        'Group balance is too low.'
-                    );
-                    return;
-                }
-
-                // Calculate amount per user
-                $userCount = count($users);
-                $amountPerUser = $payoutAmount / $userCount;
-                Log::info("Payout amount to be charged per user: $amountPerUser");
-
-                // Charge each user
-                foreach ($users as $user) {
-                    // Make sure user has enough balance
-                    if ($user->balance >= $amountPerUser) {
-                        $user->balance -= $amountPerUser;
-                        $user->save();
-                    } else {
-                        // Handle case where an individual user doesn't have enough
-                        $validator->errors()->add(
-                            'payout_amount',
-                            "User {$user->name} (ID: {$user->id}) has insufficient balance."
-                        );
-                        return; // Stop execution
-                    }
-                }
-
-                // Pay out the correct stamp
-                
-            });
-        });
+            }
+        }
     }
+    });
+}
+               
 
 
 
