@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Group;
+use Illuminate\Http\Request;
 
 class StoreTransactionRequest extends FormRequest
 {
@@ -28,11 +29,9 @@ class StoreTransactionRequest extends FormRequest
 {
     return [
         'amusement_id' => 'required|integer|exists:amusements,id',
-        'user_id' => 'required|integer|exists:users,id',
-        'group_id' => 'required|integer|exists:groups,id',
         'stake_amount' => 'nullable|numeric',
         'payout_amount' => 'nullable|numeric',
-        'stamp_id' => 'nullable|string|exists:stamps,id|prohibited_if:stake_amount,!null',
+        'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
     ];
 }
 
@@ -40,7 +39,10 @@ public function withValidator($validator)
 {
     $validator->after(function ($validator) {
 
-        if ($validator->errors()->has('user_id') || $validator->errors()->has('group_id') || $validator->errors()->has('amusement_id')) {
+        $request = app(Request::class);
+        $user = $request->attributes->get('user');
+        $group = $request->attributes->get('group');
+        if ( $validator->errors()->has('amusement_id')) {
             return;
         }
         // Validation checks only - no database updates
@@ -55,9 +57,7 @@ public function withValidator($validator)
         }
 
         // Check balances without modifying them
-        $user = User::findOrFail($this->user_id);
-        $groupId = $this->group_id;
-        $groupUsers = User::where('group_id', $groupId)->get();
+        $groupUsers = User::where('group_id', $group->id)->get();
         $groupUserCount = count($groupUsers);
 
         // When stake amount is provided, validate the user has sufficient balance
