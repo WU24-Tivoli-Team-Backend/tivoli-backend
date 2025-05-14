@@ -32,10 +32,5 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AmusementSeeder::class);
         $this->call(TransactionSeeder::class);
-
-        $this->call([
-            GroupApiKeySeeder::class,
-        ]);
-        $this->call(StampSeeder::class);
     }
 }
