@@ -21,7 +21,7 @@ Route::get('/test', [TestController::class, 'ping']);
 Route::post('/validate-api-key', [ApiKeyController::class, 'validate']);
 
 /** Group API routes */
-Route::apiResource('/users', UserController::class)->middleware('auth:sanctum');
+Route::apiResource('/users', UserController::class);
 
 Route::apiResource('/groups', GroupController::class);
 

@@ -8,8 +8,8 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Group;
-use Illuminate\Http\Request;
 use App\Models\Amusement;
+
 class StoreTransactionRequest extends FormRequest
 {
     /**
@@ -38,14 +38,19 @@ class StoreTransactionRequest extends FormRequest
     public function messages()
 {
     return [
-        'amusement_id' => 'required|integer|exists:amusements,id',
-        'stake_amount' => 'nullable|numeric',
-        'payout_amount' => 'nullable|numeric',
-        'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
+        'amusement_id.exists' => 'The selected amusement does not exist.',
+        'stamp_id.exists' => 'The selected stamp does not exist.',
+        'stamp_id.prohibited_if' => 'A stamp cannot be used when stake amount is provided.',
     ];
 }
 
-public function withValidator($validator)
+    /**
+     * Configure the validator instance.
+     *
+     * @param \Illuminate\Validation\Validator $validator
+     * @return void
+     */
+   public function withValidator($validator)
 {
     $validator->after(function ($validator) {
         $request = app(Request::class);
@@ -116,10 +121,11 @@ public function withValidator($validator)
                 }
             }
         }
-        }
+    }
     });
 }
                
+
 
 
     /**
@@ -135,7 +141,7 @@ public function withValidator($validator)
         if ($this->ajax() || $this->wantsJson()) {
             throw new HttpResponseException(
                 response()->json([
-                    'message' => 'Transaction was not created.',
+                    'message' => 'Validation failed',
                     'errors' => $validator->errors()
                 ], 500)
             );
