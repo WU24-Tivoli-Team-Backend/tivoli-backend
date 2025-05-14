@@ -48,7 +48,6 @@ class StoreTransactionRequest extends FormRequest
 public function withValidator($validator)
 {
     $validator->after(function ($validator) {
-
         $request = app(Request::class);
         $user = $request->attributes->get('user');
         $group = $request->attributes->get('group');
@@ -84,6 +83,26 @@ public function withValidator($validator)
                 $validator->errors()->add('payout_amount', 'Group balance is too low.');
                 return;
             }
+
+
+        // Check balances without modifying them
+        $groupUsers = User::where('group_id', $group->id)->get();
+        $groupUserCount = count($groupUsers);
+
+        // When stake amount is provided, validate the user has sufficient balance
+        if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
+            $validator->errors()->add('stake_amount', 'User balance is too low.');
+            return;
+        }
+
+        // When payout amount is provided, validate the group has sufficient balance
+        if ($this->filled('payout_amount')) {
+            $groupBalance = $groupUsers->sum('balance');
+            
+            if ($this->payout_amount > $groupBalance) {
+                $validator->errors()->add('payout_amount', 'Group balance is too low.');
+                return;
+            }
             
             // Check individual user balances
             $amountPerUser = $this->payout_amount / $groupUserCount;
@@ -97,8 +116,10 @@ public function withValidator($validator)
                 }
             }
         }
+        }
     });
 }
+               
 
 
     /**
