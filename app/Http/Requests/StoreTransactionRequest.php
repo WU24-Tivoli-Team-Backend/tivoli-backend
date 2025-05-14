@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\Amusement;
 
 class StoreTransactionRequest extends FormRequest
 {
@@ -78,6 +79,22 @@ class StoreTransactionRequest extends FormRequest
                 );
                 return;
             }
+
+            // Check if the amusements stamp is correct
+            if (!empty($this->stamp_id)) {
+                $amusement = Amusement::find($this->amusement_id);
+
+                if (!$amusement) {
+                    $validator->errors()->add('amusement_id', 'Amusement not found.');
+                    return;
+                }
+
+                if ($amusement->stamp_id !== (int) $this->stamp_id) {
+                    $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement’s stamp.');
+                    return;
+                }
+            }
+
             $user = User::findOrFail($this->user_id); // Use the actual user_id field
 
             $groupId = Group::findOrFail($this->group_id);
@@ -154,6 +171,9 @@ class StoreTransactionRequest extends FormRequest
                         return; // Stop execution
                     }
                 }
+
+                // Pay out the correct stamp
+                
             });
         });
     }
