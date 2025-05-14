@@ -20,6 +20,7 @@ class TransactionResource extends JsonResource
             'amusement' => $this->amusement_id,
             'stake' => $this->stake_amount,
             'payout' => $this->payout_amount,
+            'stamp' => $this->stamp_id,
         ];
     }
 }
