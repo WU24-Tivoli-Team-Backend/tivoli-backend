@@ -11,32 +11,16 @@ class JwtTokenController extends Controller
 {
     public function __invoke(Request $request)
     {
-        // The API key middleware has already authenticated the group
-        $group = $request->attributes->get('group');
-        
-        // Get the user from the request
-        $userId = $request->input('user_id');
-        
-        if (!$userId) {
-            return response()->json(['error' => 'User ID is required'], 400);
-        }
-        
-        $user = User::find($userId);
-        
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-        
-        // Ensure the user belongs to the authenticated group
-        if ($user->group_id != $group->id) {
-            return response()->json(['error' => 'User does not belong to the authenticated group'], 403);
-        }
+        $user = Auth::user();
 
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+   
         $payload = [
             'iss' => 'yrgobanken.vip',
             'sub' => $user->id,
             'email' => $user->email,
-            'group_id' => $user->group_id,
             'iat' => time(),
             'exp' => time() + (60 * 60), // 1 hour
         ];

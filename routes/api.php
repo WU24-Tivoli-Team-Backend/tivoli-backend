@@ -29,10 +29,8 @@ Route::apiResource('/votes', VoteController::class)->middleware('json.accept');
 Route::middleware(['api.auth', 'json.accept'])->group(function () {
     Route::apiResource('/transactions', TransactionController::class);
     Route::apiResource('/stamps', StampController::class);
-    
-    // JWT token route - only accessible with valid API key //VIKTOR: does this need to be protected by api.auth?
-    Route::get('/jwt-token', JwtTokenController::class);
+
+
 });
 
-// VIKTOR: should this be protected by api.auth?
-// Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
+Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
