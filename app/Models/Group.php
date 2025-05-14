@@ -10,6 +10,8 @@ class Group extends Model
 {
     use HasFactory, HasApiTokens;
 
+    protected $fillable = ['api_key'];
+
     /** A group has many members (users) */
     public function users()
     {
