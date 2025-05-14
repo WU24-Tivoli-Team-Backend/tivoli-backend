@@ -25,6 +25,7 @@ class AmusementFactory extends Factory
             'description' => $this->faker->text(200),
             'image_url' => $this->faker->imageUrl(640, 480, 'amusement'),
             'url' => $this->faker->url(),
+            'stamp_id' => null,
         ];
     }
 }
