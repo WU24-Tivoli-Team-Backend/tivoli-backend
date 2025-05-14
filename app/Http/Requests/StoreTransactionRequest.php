@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Amusement;
+use Illuminate\Http\Request;
 
 class StoreTransactionRequest extends FormRequest
 {
@@ -68,6 +69,21 @@ class StoreTransactionRequest extends FormRequest
         if (!$this->filled('stake_amount') && !$this->filled('payout_amount')) {
             $validator->errors()->add('message', 'You must provide either stake_amount or payout_amount.');
             return;
+        }
+
+        // Check if the amusements stamp is correct
+        if (!empty($this->stamp_id)) {
+            $amusement = Amusement::find($this->amusement_id);
+
+            if (!$amusement) {
+                $validator->errors()->add('amusement_id', 'Amusement not found.');
+                return;
+            }
+
+            if ($amusement->stamp_id !== (int) $this->stamp_id) {
+                $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement’s stamp.');
+                return;
+            }
         }
 
         // Check balances without modifying them
