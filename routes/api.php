@@ -10,12 +10,15 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StampController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ApiKeyController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::get('/test', [TestController::class, 'ping']);
+
+Route::post('/validate-api-key', [ApiKeyController::class, 'validate']);
 
 /** Group API routes */
 Route::apiResource('/users', UserController::class);
