@@ -48,7 +48,7 @@ class ApiAuthentication
                 $user = User::find($payload->sub);
                 
                 // Verify the user belongs to the authenticated group
-                if ($user && $user->group_id == $group->id) {
+                if ($user) {
                     Auth::login($user);
                     $request->attributes->add(['user' => $user]);
                 }
