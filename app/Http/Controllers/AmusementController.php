@@ -9,15 +9,29 @@ use App\Http\Resources\AmusementResource;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+use App\Policies\AmusementPolicy;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
 
 class AmusementController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $amusements = Amusement::all();
+
+        $groupId = $request->query('group_id');
+    
+        $query = Amusement::query();
+        
+        // Only filter by group_id if it's provided
+        if ($groupId) {
+            $query->where('group_id', $groupId);
+        }
+        
+        $amusements = $query->get();
         return AmusementResource::collection($amusements);
     }
 
@@ -27,18 +41,19 @@ class AmusementController extends Controller
     public function store(StoreAmusementRequest $request)
     {
         // Validate the request using the StoreAmusementRequest
-        $amusement = Amusement::create($request->validated());
+        $validatedData = $request->validated();
+        $validatedData['group_id'] = $request->user()->group_id;
+        $amusement = Amusement::create($validatedData);
         try {
-        return response()->json([
-            'message' => 'Amusement created successfully.',
-            'data'    => new AmusementResource($amusement),
-        ], 201);
-    } catch (ModelNotFoundException $exception) {
-        return response()->json([
-            'message' => 'Amusement not created',
-        ], 404);
-
-    }
+            return response()->json([
+                'message' => 'Amusement created successfully.',
+                'data'    => new AmusementResource($amusement),
+            ], 201);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'message' => 'Amusement not created',
+            ], 404);
+        }
     }
 
     /**
@@ -46,7 +61,8 @@ class AmusementController extends Controller
      */
     public function show(Amusement $amusement)
     {
-        return new AmusementResource($amusement);
+        
+        return response()->json(new AmusementResource($amusement));
     }
 
 
@@ -55,10 +71,20 @@ class AmusementController extends Controller
      */
     public function update(UpdateAmusementRequest $request, Amusement $amusement)
     {
-        $amusement->update($request->validated());
-
-        return (new AmusementResource($amusement))
-            ->additional(['message' => 'Amusement updated successfully.']);
+        $user = Auth::user();
+    
+        // Check if the amusement belongs to the user's group
+        if ($amusement->group_id !== $user->group_id) {
+            return response()->json(['message' => 'You do not have permission to update this amusement.'], 403);
+        }
+        
+        // The request is already validated through the UpdateAmusementRequest class
+        $validated = $request->validated();
+        
+        // Update the amusement that was passed as a parameter
+        $amusement->update($validated);
+        
+        return response()->json(['message' => 'Amusement updated successfully.', 'amusement' => new AmusementResource($amusement)]);
     }
 
     /**
