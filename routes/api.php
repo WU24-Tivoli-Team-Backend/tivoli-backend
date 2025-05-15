@@ -36,3 +36,12 @@ Route::middleware(['api.auth', 'json.accept'])->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
+
+Route::get('/cors-test', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'CORS is working!',
+        'headers' => request()->headers->all(),
+        'origin' => request()->headers->get('origin'),
+    ]);
+})->middleware('cors');
