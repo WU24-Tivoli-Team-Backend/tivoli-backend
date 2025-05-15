@@ -17,49 +17,49 @@ class GroupSeeder extends Seeder
         $predefinedGroups = [
             [
                 //group 1
-                'api_key' => '123',
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 2
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 3
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 4
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 5
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 6
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 7
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 //group 8
-                'api_key' => str::uuid(),
+                'api_key' => 'failed_static_api_seed',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
