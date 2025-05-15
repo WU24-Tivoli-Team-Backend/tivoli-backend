@@ -12,8 +12,6 @@ class UserStamp extends Model
     protected $fillable = [
         'user_id',
         'stamp_id',
-        'amusement_id',
-        'collected_at'
     ];
     
     protected $casts = [
@@ -28,10 +26,5 @@ class UserStamp extends Model
     public function stamp()
     {
         return $this->belongsTo(Stamp::class);
-    }
-    
-    public function amusement()
-    {
-        return $this->belongsTo(Amusement::class);
     }
 }
