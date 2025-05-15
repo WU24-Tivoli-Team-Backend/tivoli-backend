@@ -44,4 +44,4 @@ Route::get('/cors-test', function () {
         'headers' => request()->headers->all(),
         'origin' => request()->headers->get('origin'),
     ]);
-})->middleware('cors');
+})->middleware('web');
