@@ -26,7 +26,6 @@ class StoreAmusementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_id' => 'required|integer|exists:groups,id',
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:attraction,game', // Must be one of the defined enum values
             'description' => 'nullable|string|max:1000',
@@ -38,7 +37,6 @@ class StoreAmusementRequest extends FormRequest
 
     public function messages() {
         return [
-            'group_id.exists' => 'The selected group does not exist.',
             'name.required' => 'You need to provide a name',
             'type.required' => 'You need to enter a type, either attraction or game'
         ];
