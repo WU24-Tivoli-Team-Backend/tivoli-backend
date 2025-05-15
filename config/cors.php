@@ -26,6 +26,8 @@ return [
         env('FRONTEND_URL', 'http://localhost:3001'),
         rtrim(env('FRONTEND_URL', 'http://localhost:3001'), '/'),
         env('FRONTEND_URL', 'http://localhost:3001') . '/',
+        'https://wu-24-tivoli.vercel.app',
+        'https://wu-24-tivoli.vercel.app/'
     ],
 
     'allowed_origins_patterns' => [],
