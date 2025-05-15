@@ -45,3 +45,10 @@ Route::get('/cors-test', function () {
         'origin' => request()->headers->get('origin'),
     ]);
 })->middleware('web');
+
+Route::get('/cors-test-2', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'CORS test works!',
+    ]);
+});
