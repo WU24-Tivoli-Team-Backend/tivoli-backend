@@ -156,7 +156,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+    'domain' => env('SESSION_DOMAIN', '.wu-24-tivoli.vercel.app'),
 
     /*
     |--------------------------------------------------------------------------
