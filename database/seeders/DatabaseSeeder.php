@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(GroupSeeder::class);
+        $this->call(GroupApiKeySeeder::class);
 
         User::factory()->count(10)->create();
 
@@ -20,7 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Rune Pandadottir',
             'email' => 'rune@yrgobanken.vip',
             'password' => bcrypt('password'),
-            'group_id' => 1,
+            'group_id' => 8,
             'balance' => 25,
             'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
             'github' => '',
