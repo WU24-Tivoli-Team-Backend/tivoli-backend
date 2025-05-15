@@ -29,11 +29,10 @@ Route::apiResource('/amusements', AmusementController::class)->middleware('json.
 
 Route::apiResource('/votes', VoteController::class)->middleware('json.accept');
 
+Route::apiResource('/stamps', StampController::class)->middleware('json.accept');
+
 Route::middleware(['api.auth', 'json.accept'])->group(function () {
     Route::apiResource('/transactions', TransactionController::class);
-    Route::apiResource('/stamps', StampController::class);
-
-
 });
 
 Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
