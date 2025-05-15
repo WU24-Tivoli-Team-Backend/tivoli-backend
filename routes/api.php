@@ -11,6 +11,7 @@ use App\Http\Controllers\StampController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApiKeyController;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -46,9 +47,22 @@ Route::get('/cors-test', function () {
     ]);
 })->middleware('web');
 
-Route::get('/cors-test-2', function () {
+Route::get('/auth-test', function (Request $request) {
     return response()->json([
         'success' => true,
-        'message' => 'CORS test works!',
+        'message' => 'Authentication test endpoint',
+        'is_authenticated' => auth()->check(),
+        'user' => $request->user(),
+        'session_id' => session()->getId(),
+        'cookies' => $request->cookies->all(),
+    ]);
+});
+
+Route::get('/debug-sanctum', function () {
+    return response()->json([
+        'stateful_domains' => config('sanctum.stateful'),
+        'frontend_url' => env('FRONTEND_URL'),
+        'parsed_host' => parse_url(env('FRONTEND_URL'), PHP_URL_HOST),
+        'app_url' => env('APP_URL'),
     ]);
 });
