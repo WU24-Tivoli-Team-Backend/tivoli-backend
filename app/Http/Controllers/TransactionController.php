@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\UserStamp;
 
 class TransactionController extends Controller
 {
@@ -112,6 +113,14 @@ class TransactionController extends Controller
                  $user->balance += $validatedData['payout_amount'];
                  $user->save();
              }
+
+             // Handle stamp on payout (insert into user_stamps table)
+             if (isset($validatedData['stamp_id'])) {
+                UserStamp::create([
+                    'user_id' => $user->id,
+                    'stamp_id' => $validatedData['stamp_id'],
+                ]);
+            }
  
              DB::commit();
              return response()->json(['message' => 'Transaction created', 'transaction' => $transaction], 201);
