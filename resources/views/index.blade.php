@@ -11,7 +11,7 @@
         <h1 class="text-4xl font-bold mb-6">Welcome to WU24 Tivoli API platform!</h1>
         <p class="text-lg mb-8">
             This documentation is for teams who want to integrate their mini-games into the Tivoli system.
-            Once your game is connected, users will be able to launch it from <a href="https://wu-24-tivoli.vercel.app/" class="text-blue-600 underline hover:text-blue-800">
+            Once your game is connected, users will be able to launch it from <a href="https://tivoli.yrgobanken.vip/" class="text-blue-600 underline hover:text-blue-800">
                 <strong>Tivoli</strong>
             </a> and send gameplay data (like wins) securely back to our backend.
         </p>
