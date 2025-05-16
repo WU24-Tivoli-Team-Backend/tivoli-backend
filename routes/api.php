@@ -34,6 +34,7 @@ Route::apiResource('/stamps', StampController::class)->middleware('json.accept')
 
 Route::middleware(['api.auth', 'json.accept'])->group(function () {
     Route::apiResource('/transactions', TransactionController::class);
+    Route::get('/amusements/find-by-name', [AmusementController::class, 'findByName']);
 });
 
 Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
