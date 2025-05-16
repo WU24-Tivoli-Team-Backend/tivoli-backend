@@ -14,14 +14,16 @@ class EnsureEmailIsVerified
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (! $request->user() ||
-            ($request->user() instanceof MustVerifyEmail &&
-            ! $request->user()->hasVerifiedEmail())) {
-            return response()->json(['message' => 'Your email address is not verified.'], 409);
-        }
-
-        return $next($request);
-    }
+public function handle(Request $request, Closure $next): Response
+{
+    return $next($request);
+    
+    // Original code (commented out)
+    // if (! $request->user() ||
+    //     ($request->user() instanceof MustVerifyEmail &&
+    //     ! $request->user()->hasVerifiedEmail())) {
+    //     return response()->json(['message' => 'Your email address is not verified.'], 409);
+    // }
+    // return $next($request);
+}
 }
