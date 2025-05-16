@@ -23,7 +23,7 @@ Route::post('/validate-api-key', [ApiKeyController::class, 'validate']);
 
 /** Group API routes */
 Route::apiResource('/users', UserController::class)
-    ->only(['show, index'])
+    // ->only(['show'])
     ->middleware('auth:sanctum');
 
 // // API routes for logged-in users
