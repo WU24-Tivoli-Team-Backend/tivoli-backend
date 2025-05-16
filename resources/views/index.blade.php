@@ -99,6 +99,14 @@
         <p class="mb-4">
             Password: password
         </p>
+
+        <h2 class="text-2xl font-semibold mb-4">
+            Yaml
+        </h2>
+        <p>
+            here you can download the <strong><a href="/tivoli.yaml" class="text-blue-600 underline hover:text-blue-800" download>yaml</a></strong> file to see all the API endpoints!
+        </p>
+
     </main>
 </body>
 </html>
