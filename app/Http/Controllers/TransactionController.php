@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\UserStamp;
+use App\Models\Amusement;
 
 class TransactionController extends Controller
 {
@@ -71,8 +72,10 @@ class TransactionController extends Controller
          $user = User::findOrFail($validatedData['user_id']);
  
          // For group, you can get it directly from request attributes
-         $group = $request->attributes->get('group');
-         $groupId = $group->id;
+         //$group = $request->attributes->get('group');
+         //$groupId = $group->id;
+         $amusement = Amusement::findOrFail($validatedData['amusement_id']);
+         $groupId = $amusement->group_id;
  
          // Or, if you need it from validated data as before:
          // $groupId = $validatedData['group_id'];
