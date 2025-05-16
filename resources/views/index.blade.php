@@ -46,7 +46,7 @@
 
         <h3 class="text-xl font-semibold mt-6 mb-2">How It’s Created</h3>
         <ul class="list-disc list-inside mb-6 space-y-2">
-            <li>The JWT is created by the Tivoli backend when the user logs in at <strong>tivoli.se</strong>.</li>
+            <li>The JWT is created by the Tivoli backend when the user logs in.</li>
             <li>The token contains digitally signed data (e.g. user ID, expiration time, etc.).</li>
             <li>Your game does not need to parse or validate the token — only attach it in requests.</li>
         </ul>
@@ -104,7 +104,7 @@
             Yaml
         </h2>
         <p>
-            Here you can download the <strong><a href="/tivoli.yaml" class="text-blue-600 underline hover:text-blue-800" download>yaml</a></strong> file to see all the API endpoints! Go to <strong><a href="https://editor.swagger.io/" class="text-blue-600 underline hover:text-blue-800">Swagger</a></strong> and import the file. Now you should see the Tivoli centralbank API!
+            Here you can download the <strong><a href="/tivoli.yaml" class="text-blue-600 underline hover:text-blue-800" download>yaml</a></strong> file to see all the API endpoints! Go to <strong><a href="https://editor.swagger.io/" class="text-blue-600 underline hover:text-blue-800">Swagger</a></strong> and import the file. Now you should see the Tivoli centralbank API. You only need to post transactions to the API. Follow the code example above to integrate it into your code seamlessly.
         </p>
 
     </main>
