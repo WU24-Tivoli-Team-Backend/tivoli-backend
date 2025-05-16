@@ -38,6 +38,16 @@ class UserController extends Controller
             ->additional(['message' => 'User info updated successfully.']);
     }
 
+    // PATCH /api/user
+    public function updateSelf(UpdateUserRequest $request)
+    {
+        $user = $request->user();
+        $user->update($request->validated());
+
+        return (new UserResource($user))
+            ->additional(['message' => 'Profile updated successfully.']);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -51,16 +61,14 @@ class UserController extends Controller
     }
 
 
-    // public function show($id)
-    // {
 
-    //     try {
-    //         $user = User::findOrFail($id);
-    //         return $user;
-    //     } catch (ModelNotFoundException $exception) {
-    //         return response()->json([
-    //             'message' => 'User not found',
-    //         ], 404);
-    //     }
-    // }
+
+    // DELETE /api/user (if we want to allow users to delete their own account)
+    public function destroySelf(Request $request)
+    {
+        $user = $request->user();
+        $user->delete();
+
+        return response()->noContent(); // 204 No Content
+    }
 }

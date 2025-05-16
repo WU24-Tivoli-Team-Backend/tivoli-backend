@@ -22,7 +22,15 @@ Route::get('/test', [TestController::class, 'ping']);
 Route::post('/validate-api-key', [ApiKeyController::class, 'validate']);
 
 /** Group API routes */
-Route::apiResource('/users', UserController::class);
+Route::apiResource('/users', UserController::class)
+    ->only(['show'])
+    ->middleware('auth:sanctum');
+
+// // API routes for logged-in users
+Route::middleware('auth:sanctum')->group(function () {
+    Route::patch('/user',  [UserController::class, 'updateSelf']); // Update the logged-in user's data
+    // Route::delete('/user', [UserController::class, 'destroySelf']); // Delete the logged-in user's account - not sure if we want to allow this
+});
 
 Route::apiResource('/groups', GroupController::class);
 
