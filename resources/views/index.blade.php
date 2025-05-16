@@ -104,7 +104,7 @@
             Yaml
         </h2>
         <p>
-            here you can download the <strong><a href="/tivoli.yaml" class="text-blue-600 underline hover:text-blue-800" download>yaml</a></strong> file to see all the API endpoints!
+            Here you can download the <strong><a href="/tivoli.yaml" class="text-blue-600 underline hover:text-blue-800" download>yaml</a></strong> file to see all the API endpoints! Go to <strong><a href="https://editor.swagger.io/" class="text-blue-600 underline hover:text-blue-800">Swagger</a></strong> and import the file. Now you should see the Tivoli centralbank API!
         </p>
 
     </main>
