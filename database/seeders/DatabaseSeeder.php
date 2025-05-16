@@ -17,16 +17,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->count(10)->create();
 
-        User::factory()->create([
-            'name' => 'Rune Pandadottir',
-            'email' => 'rune@yrgobanken.vip',
-            'password' => bcrypt('password'),
-            'group_id' => 8,
-            'balance' => 9999999.99,
-            'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
-            'github' => '',
-            'url' => '',
-        ]);
+        $this->call(RuneSeeder::class);
 
         $this->call(StampSeeder::class);
 

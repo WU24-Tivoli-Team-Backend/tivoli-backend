@@ -38,31 +38,31 @@ Route::middleware(['api.auth', 'json.accept'])->group(function () {
 
 Route::middleware('auth:sanctum')->get('/jwt-token', JwtTokenController::class);
 
-Route::get('/cors-test', function () {
-    return response()->json([
-        'success' => true,
-        'message' => 'CORS is working!',
-        'headers' => request()->headers->all(),
-        'origin' => request()->headers->get('origin'),
-    ]);
-})->middleware('web');
+// Route::get('/cors-test', function () {
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'CORS is working!',
+//         'headers' => request()->headers->all(),
+//         'origin' => request()->headers->get('origin'),
+//     ]);
+// })->middleware('web');
 
-Route::get('/auth-test', function (Request $request) {
-    return response()->json([
-        'success' => true,
-        'message' => 'Authentication test endpoint',
-        'is_authenticated' => auth()->check(),
-        'user' => $request->user(),
-        'session_id' => session()->getId(),
-        'cookies' => $request->cookies->all(),
-    ]);
-});
+// Route::get('/auth-test', function (Request $request) {
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'Authentication test endpoint',
+//         'is_authenticated' => auth()->check(),
+//         'user' => $request->user(),S
+//         'session_id' => session()->getId(),
+//         'cookies' => $request->cookies->all(),
+//     ]);
+// });
 
-Route::get('/debug-sanctum', function () {
-    return response()->json([
-        'stateful_domains' => config('sanctum.stateful'),
-        'frontend_url' => env('FRONTEND_URL'),
-        'parsed_host' => parse_url(env('FRONTEND_URL'), PHP_URL_HOST),
-        'app_url' => env('APP_URL'),
-    ]);
-});
+// Route::get('/debug-sanctum', function () {
+//     return response()->json([
+//         'stateful_domains' => config('sanctum.stateful'),
+//         'frontend_url' => env('FRONTEND_URL'),
+//         'parsed_host' => parse_url(env('FRONTEND_URL'), PHP_URL_HOST),
+//         'app_url' => env('APP_URL'),
+//     ]);
+// });
