@@ -64,12 +64,7 @@ class StoreTransactionRequest extends FormRequest
         if ($this->filled('stake_amount') && $this->filled('payout_amount')) {
             $validator->errors()->add('message', 'You cannot provide both stake_amount and payout_amount.');
             return;
-        }
-
-        if (!$this->filled('stake_amount') && !$this->filled('payout_amount')) {
-            $validator->errors()->add('message', 'You must provide either stake_amount or payout_amount.');
-            return;
-        }
+        }  
 
         // Check if the amusements stamp is correct
         if (!empty($this->stamp_id)) {
@@ -96,48 +91,17 @@ class StoreTransactionRequest extends FormRequest
             return;
         }
 
-        // When payout amount is provided, validate the group has sufficient balance
-        if ($this->filled('payout_amount')) {
-            $groupBalance = $groupUsers->sum('balance');
-            
-            if ($this->payout_amount > $groupBalance) {
-                $validator->errors()->add('payout_amount', 'Group balance is too low.');
-                return;
-            }
-
-
-        // Check balances without modifying them
-        $groupUsers = User::where('group_id', $group->id)->get();
-        $groupUserCount = count($groupUsers);
+        // An attraction can only provide a stamp
+        if ($amusement->type === 'attraction' && $this->filled('payout_amount')) {
+            $validator->errors()->add('payout_amount', 'An attraction can only provide a stamp.');
+            return;
+        }
 
         // When stake amount is provided, validate the user has sufficient balance
         if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
             $validator->errors()->add('stake_amount', 'User balance is too low.');
             return;
         }
-
-        // When payout amount is provided, validate the group has sufficient balance
-        if ($this->filled('payout_amount')) {
-            $groupBalance = $groupUsers->sum('balance');
-            
-            if ($this->payout_amount > $groupBalance) {
-                $validator->errors()->add('payout_amount', 'Group balance is too low.');
-                return;
-            }
-            
-            // Check individual user balances
-            $amountPerUser = $this->payout_amount / $groupUserCount;
-            foreach ($groupUsers as $groupUser) {
-                if ($groupUser->balance < $amountPerUser) {
-                    $validator->errors()->add(
-                        'payout_amount', 
-                        "User {$groupUser->name} (ID: {$groupUser->id}) has insufficient balance."
-                    );
-                    return;
-                }
-            }
-        }
-    }
     });
 }
                
