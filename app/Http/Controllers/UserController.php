@@ -24,7 +24,14 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return new UserResource($user);
+        try {
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -32,20 +39,34 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->validated());
+        try {
+            $user->update($request->validated());
 
-        return (new UserResource($user))
-            ->additional(['message' => 'User info updated successfully.']);
+            return (new UserResource($user))
+                ->additional(['message' => 'User info updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     // PATCH /api/user
     public function updateSelf(UpdateUserRequest $request)
     {
-        $user = $request->user();
-        $user->update($request->validated());
+        try {
+            $user = $request->user();
+            $user->update($request->validated());
 
-        return (new UserResource($user))
-            ->additional(['message' => 'Profile updated successfully.']);
+            return (new UserResource($user))
+                ->additional(['message' => 'Profile updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update your profile.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -53,11 +74,18 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        try {
+            $user->delete();
 
-        return response()->json([
-            'message' => 'Amusement deleted',
-        ], 204);
+            return response()->json([
+                'message' => 'User deleted successfully.',
+            ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -66,9 +94,16 @@ class UserController extends Controller
     // DELETE /api/user (if we want to allow users to delete their own account)
     public function destroySelf(Request $request)
     {
-        $user = $request->user();
-        $user->delete();
+        try {
+            $user = $request->user();
+            $user->delete();
 
-        return response()->noContent(); // 204 No Content
+            return response()->noContent(); // 204 No Content
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete your account.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
