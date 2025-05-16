@@ -251,10 +251,9 @@ paths:
                     id:
                       type: number
                       description: "Unique identifier for the transaction"
-                    user_id:
-                      type: string
                     amusement_id:
                       type: string
+                      description: "ID of the amusement"
                     stake_amount:
                       type: number
                       format: float
@@ -262,10 +261,44 @@ paths:
                     payout_amount:
                       type: number
                       format: float
-                      description: "Payout amount the user will receive (only when winning)"
+                      description: "Payout amount the user will receive (only when winning a game)"
                     stamp_id:
                       type: string
                       description: "ID of the stamp the user won (only when winning)"
+    post:
+      summary: "Create a new transaction"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amusement_id:
+                  type: string
+                  description: "ID of the amusement"
+                stake_amount:
+                  type: number
+                  format: float
+                  description: "Stake amount the user wants to bet (only when paying)"
+                payout_amount:
+                  type: number
+                  format: float
+                  description: "Payout amount the user will receive (only when winning a game)"
+                stamp_id:
+                  type: string
+                  description: "ID of the stamp the user won (only when winning)"
+      responses:
+        "201":
+          description: "Transaction created successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    description: "Unique identifier for the transaction"
   /transactions/{id}:
     get:
       summary: "Get a specific transaction by ID"
@@ -286,10 +319,9 @@ paths:
                   id:
                     type: number
                     description: "Unique identifier for the transaction"
-                  user_id:
-                    type: string
                   amusement_id:
                     type: string
+                    description: "ID of the amusement"
                   stake_amount:
                     type: number
                     format: float
