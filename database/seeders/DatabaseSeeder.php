@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'rune@yrgobanken.vip',
             'password' => bcrypt('password'),
             'group_id' => 8,
-            'balance' => 25,
+            'balance' => 9999999.99,
             'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
             'github' => '',
             'url' => '',
