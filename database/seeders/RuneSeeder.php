@@ -17,7 +17,7 @@ class RuneSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Rune Pandadottir',
             'email' => 'rune@yrgobanken.vip',
-            'password' => Hash::make('securePassword123'), // Use a secure password in production
+            'password' => Hash::make('password'), // Use a secure password in production
             'group_id' => 8,
             'balance' => 9999999.99, // Note: Consider using a more realistic value
             'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
@@ -26,5 +26,10 @@ class RuneSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $rune = DB::table('users')->where('email', 'rune@yrgobanken.vip')->first();
+
+        // Output as JSON
+        $this->command->info(json_encode($rune, JSON_PRETTY_PRINT));
     }
 }
