@@ -27,7 +27,24 @@ return [
         rtrim(env('FRONTEND_URL', 'http://localhost:3001'), '/'),
         env('FRONTEND_URL', 'http://localhost:3001') . '/',
         'https://tivoli.yrgobanken.vip',
-        'https://tivoli.yrgobanken.vip/'
+        'https://tivoli.yrgobanken.vip/',
+        'https://enter-paneer-game.vercel.app/',
+        'https://enter-paneer-game.vercel.app',
+        'https://tivoli-mole.vercel.app/',
+        'https://tivoli-mole.vercel.app',
+        'https://golden-beetlebug.vercel.app/',
+        'https://golden-beetlebug.vercel.app',
+        'https://thehauntedescape.vercel.app/',
+        'https://thehauntedescape.vercel.app',
+        'https://misfortunate-unfair-funfair-co75.vercel.app/',
+        'https://misfortunate-unfair-funfair-co75.vercel.app',
+        'https://go-kart-nine.vercel.app/',
+        'https://go-kart-nine.vercel.app',
+        'https://wheel-of-fortune-lilac.vercel.app/',
+        'https://wheel-of-fortune-lilac.vercel.app',
+        'https://jolor2024.github.io/bingo/',
+        'https://jolor2024.github.io/bingo'
+
     ],
 
     'allowed_origins_patterns' => [],
@@ -39,7 +56,7 @@ return [
         'Accept',
         'Origin',
         'X-XSRF-TOKEN',
-        'Cache-control'                     
+        'Cache-control'                  
     ],
 
     'max_age' => 0,
