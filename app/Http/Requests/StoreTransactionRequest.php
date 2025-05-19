@@ -32,7 +32,7 @@ class StoreTransactionRequest extends FormRequest
             'amusement_id' => 'required|integer|exists:amusements,id',
             'stake_amount' => 'nullable|numeric',
             'payout_amount' => 'nullable|numeric',
-            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
+            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,present',
         ];
     }
 
@@ -67,8 +67,8 @@ class StoreTransactionRequest extends FormRequest
         }  
 
         // Check if the amusements stamp is correct
+        $amusement = Amusement::find($this->amusement_id);
         if (!empty($this->stamp_id)) {
-            $amusement = Amusement::find($this->amusement_id);
 
             if (!$amusement) {
                 $validator->errors()->add('amusement_id', 'Amusement not found.');
@@ -91,15 +91,21 @@ class StoreTransactionRequest extends FormRequest
             return;
         }
 
+        // When stake amount is provided, do not allow a stamp
+        if ($this->filled('stake_amount') && $this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp cannot be used when stake amount is provided.');
+            return;
+        }
+
         // An attraction can only provide a stamp
         if ($amusement->type === 'attraction' && $this->filled('payout_amount')) {
             $validator->errors()->add('payout_amount', 'An attraction can only provide a stamp.');
             return;
         }
 
-        // When stake amount is provided, validate the user has sufficient balance
-        if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
-            $validator->errors()->add('stake_amount', 'User balance is too low.');
+        // Always pay out a stamp
+        if ($this->filled('payout_amount') && !$this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp must be provided when payout amount is given.');
             return;
         }
     });
