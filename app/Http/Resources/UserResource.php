@@ -7,15 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    protected $stamps;
-
-    public function __construct($resource, $stamps = null)
-    {
-        parent::__construct($resource);
-        $this->stamps = $stamps;
-    }
-    /**
-     * Transform the resource into an array.
+     /* Transform the resource into an array.
      */
     public function toArray(Request $request): array
     {
@@ -30,7 +22,6 @@ class UserResource extends JsonResource
             'image_url' => $this->image_url,
             'github'    => $this->github,
             'url'       => $this->url,
-            'stamps'    => StampResource::collection($this->whenLoaded('stamps')),
         ];
     }
 }
