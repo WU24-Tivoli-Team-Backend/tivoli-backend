@@ -32,7 +32,7 @@ class StoreTransactionRequest extends FormRequest
             'amusement_id' => 'required|integer|exists:amusements,id',
             'stake_amount' => 'nullable|numeric',
             'payout_amount' => 'nullable|numeric',
-            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
+            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,present',
         ];
     }
 
@@ -77,6 +77,7 @@ public function withValidator($validator)
         }
 
         // Check if the amusements stamp is correct
+      
         if (!empty($this->stamp_id)) {
             if ($amusement->stamp_id !== (int) $this->stamp_id) {
                 $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement\'s stamp.');
@@ -94,17 +95,24 @@ public function withValidator($validator)
             return;
         }
 
+        // When stake amount is provided, do not allow a stamp
+        if ($this->filled('stake_amount') && $this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp cannot be used when stake amount is provided.');
+            return;
+        }
+
         // An attraction can only provide a stamp
         if ($amusement->type === 'attraction' && $this->filled('payout_amount')) {
             $validator->errors()->add('payout_amount', 'An attraction can only provide a stamp.');
             return;
         }
 
-        // No need to duplicate this check - it's already done above
-        // if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
-        //     $validator->errors()->add('stake_amount', 'User balance is too low.');
-        //     return;
-        // }
+        // Always pay out a stamp
+        if ($this->filled('payout_amount') && !$this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp must be provided when payout amount is given.');
+            return;
+        }
+
     });
 }
 
