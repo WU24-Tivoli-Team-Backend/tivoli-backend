@@ -6,6 +6,8 @@ use App\Http\Requests\StoreVoteRequest;
 use App\Http\Requests\UpdateVoteRequest;
 use App\Models\Vote;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class VoteController extends Controller
 {
@@ -16,13 +18,12 @@ class VoteController extends Controller
     {
         try {
             $voteCounts = DB::table('votes')
-                ->join('amusements', 'votes.amusement_id', '=', 'amusements.id')
+                ->leftJoin('votes', 'votes.amusement_id', '=', 'amusements.id')
                 ->select('amusements.name as amusement', DB::raw('count(*) as votes'))
                 ->groupBy('amusements.id', 'amusements.name')
                 ->get();
-    
+
             return response()->json($voteCounts, 200);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to fetch vote counts',
@@ -44,15 +45,21 @@ class VoteController extends Controller
      */
     public function store(StoreVoteRequest $request)
     {
+        Log::info('Store method triggered');
         try {
+            Log::info('Request data:', $request->all());
+
             $vote = Vote::create($request->validated());
-    
+
             return response()->json([
                 'message' => 'You have submitted your vote!',
                 'data'    => $vote,
             ], 201);
-    
         } catch (\Exception $e) {
+            Log::error('Error submitting vote:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return response()->json([
                 'message' => 'Failed to submit vote',
                 'error' => $e->getMessage(),
@@ -67,14 +74,12 @@ class VoteController extends Controller
     {
         try {
             $foundVote = Vote::findOrFail($vote->id);
-    
+
             return response()->json($foundVote, 200);
-    
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Vote not found',
             ], 404);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve vote',
@@ -98,12 +103,11 @@ class VoteController extends Controller
     {
         try {
             $vote->update($request->validated());
-    
+
             return response()->json([
                 'message' => 'Your vote has been updated successfully!',
                 'data'    => $vote,
             ], 200);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to update vote',

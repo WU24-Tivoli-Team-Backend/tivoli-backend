@@ -35,7 +35,11 @@ Route::apiResource('/groups', GroupController::class);
 
 Route::apiResource('/amusements', AmusementController::class)->middleware('json.accept')->middleware('auth:sanctum');
 
-Route::apiResource('/votes', VoteController::class)->middleware('json.accept');
+Route::apiResource('/votes', VoteController::class)->middleware('json.accept')->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 Route::apiResource('/stamps', StampController::class)->middleware('json.accept');
 
