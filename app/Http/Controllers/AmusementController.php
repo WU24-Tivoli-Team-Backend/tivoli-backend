@@ -36,35 +36,35 @@ class AmusementController extends Controller
     }
 
     /**
- * Find an amusement by name for the authenticated group
- */
-public function findByName(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string',
-    ]);
+     * Find an amusement by name for the authenticated group
+     */
+    public function findByName(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+        ]);
 
-    $name = $request->input('name');
-    $group = $request->attributes->get('group');
+        $name = $request->input('name');
+        $group = $request->attributes->get('group');
 
-    if (!$group) {
-        return response()->json(['message' => 'Group authentication required'], 401);
+        if (!$group) {
+            return response()->json(['message' => 'Group authentication required'], 401);
+        }
+
+        $amusement = Amusement::where('name', $name)
+                        ->where('group_id', $group->id)
+                        ->first();
+
+        if (!$amusement) {
+            return response()->json(['message' => 'Amusement not found'], 404);
+        }
+
+        return response()->json([
+            'id' => $amusement->id,
+            'name' => $amusement->name,
+            'group_id' => $amusement->group_id
+        ]);
     }
-
-    $amusement = Amusement::where('name', $name)
-                           ->where('group_id', $group->id)
-                           ->first();
-
-    if (!$amusement) {
-        return response()->json(['message' => 'Amusement not found'], 404);
-    }
-
-    return response()->json([
-        'id' => $amusement->id,
-        'name' => $amusement->name,
-        'group_id' => $amusement->group_id
-    ]);
-}
 
     /**
      * Store a newly created resource in storage.
