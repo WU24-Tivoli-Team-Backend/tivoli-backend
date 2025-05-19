@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserStampResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class UserController extends Controller
 {
@@ -25,7 +26,9 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
-            return new UserResource($user);
+            $user->load('stamps');
+
+            return new UserStampResource($user);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve user.',

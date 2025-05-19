@@ -39,7 +39,7 @@ return [
         'Accept',
         'Origin',
         'X-XSRF-TOKEN',
-        'Cache-control'                    // lägg till Pragma
+        'Cache-control'                     
     ],
 
     'max_age' => 0,

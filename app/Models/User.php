@@ -27,6 +27,7 @@ class User extends Authenticatable
         'image_url',
         'github',
         'url',
+        'stamps'
     ];
 
     /**
