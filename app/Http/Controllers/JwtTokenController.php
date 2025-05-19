@@ -22,7 +22,7 @@ class JwtTokenController extends Controller
             'sub' => $user->id,
             'email' => $user->email,
             'iat' => time(),
-            'exp' => time() + (60 * 60), // 1 hour
+            'exp' => time() + (60 * 60 * 4), // 1 hour
         ];
 
         $jwt = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
