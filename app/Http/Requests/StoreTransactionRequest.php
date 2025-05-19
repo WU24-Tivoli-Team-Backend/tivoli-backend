@@ -51,32 +51,36 @@ class StoreTransactionRequest extends FormRequest
      * @param \Illuminate\Validation\Validator $validator
      * @return void
      */
-   public function withValidator($validator)
+public function withValidator($validator)
 {
     $validator->after(function ($validator) {
         $request = app(Request::class);
         $user = $request->attributes->get('user');
         $group = $request->attributes->get('group');
-        if ( $validator->errors()->has('amusement_id')) {
+        
+        if ($validator->errors()->has('amusement_id')) {
             return;
         }
+        
         // Validation checks only - no database updates
         if ($this->filled('stake_amount') && $this->filled('payout_amount')) {
             $validator->errors()->add('message', 'You cannot provide both stake_amount and payout_amount.');
             return;
-        }  
+        }
+        
+        // Get the amusement first - we'll need it for multiple checks
+        $amusement = Amusement::find($this->amusement_id);
+        
+        if (!$amusement) {
+            $validator->errors()->add('amusement_id', 'Amusement not found.');
+            return;
+        }
 
         // Check if the amusements stamp is correct
-        $amusement = Amusement::find($this->amusement_id);
+      
         if (!empty($this->stamp_id)) {
-
-            if (!$amusement) {
-                $validator->errors()->add('amusement_id', 'Amusement not found.');
-                return;
-            }
-
             if ($amusement->stamp_id !== (int) $this->stamp_id) {
-                $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement’s stamp.');
+                $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement\'s stamp.');
                 return;
             }
         }
@@ -108,11 +112,9 @@ class StoreTransactionRequest extends FormRequest
             $validator->errors()->add('stamp_id', 'A stamp must be provided when payout amount is given.');
             return;
         }
+
     });
 }
-               
-
-
 
     /**
      * Handle a failed validation attempt.

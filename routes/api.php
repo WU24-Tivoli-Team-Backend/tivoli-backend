@@ -12,9 +12,12 @@ use App\Http\Controllers\VoteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApiKeyController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserStampResource;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user();
+    $user->load('stamps'); // Load the stamps relationship
+    return $user; // Use your resource
 });
 
 Route::get('/test', [TestController::class, 'ping']);
