@@ -99,6 +99,14 @@
         </p>
 
     </main>
+    <footer class="mt-16 py-6 border-t border-gray-200">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="flex justify-between items-center">
+            <p class="text-gray-600">&copy; {{ date('Y') }} Team Backend</p>
+            <a href="{{ route('admin.login') }}" class="text-blue-600 hover:underline">Admin Access</a>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
 
