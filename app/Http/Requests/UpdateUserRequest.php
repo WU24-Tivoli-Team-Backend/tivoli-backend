@@ -20,7 +20,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image_url' => 'nullable|url',
+            'image_url' => 'nullable|string',
             'github'    => 'nullable|string|max:255',
             'url'       => 'nullable|url',
         ];
