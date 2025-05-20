@@ -13,7 +13,7 @@
             This documentation is for teams who want to integrate their mini-games into the Tivoli system.
             Once your game is connected, users will be able to launch it from <a href="https://tivoli.yrgobanken.vip/" class="text-blue-600 underline hover:text-blue-800">
                 <strong>Tivoli</strong>
-            </a> and send gameplay data (like wins) securely back to our backend.
+           </a>and send gameplay data (like wins) securely back to our backend.
         </p>
 
         <h2 class="text-2xl font-semibold mb-4">Requirements Before You Start</h2>
@@ -75,20 +75,11 @@
         </p>
 
         <h2 class="text-2xl font-semibold mb-4">Using the Tivoli API</h2>
-        <h3 class="text-xl font-semibold mb-2">Required Headers for All Requests</h3>
         <p class="mb-4">
-            To interact with our backend, your game must include two headers in every request:
+           Please refer to our project <strong><a href="https://github.com/Viktor-TPD/enter-paneer-game" class="text-blue-600 underline hover:text-blue-800">Enter Paneer Game</a></strong> as a resource to see how we've worked with JWT-token authentication and API-requests. 
         </p>
 
-        <div class="bg-gray-100 border border-gray-300 rounded p-4 mb-6 text-sm text-gray-700 italic">
-            (Here we will add our backend code for the test game, making it easy for our fellow classmates to connect.)
-        </div>
-
-        <p class="mb-6">
-            If either of the required headers is missing, the request will be rejected by the Tivoli API.
-            While the API returns error responses, it is your responsibility to handle these gracefully and display appropriate error messages within your game.
-        </p>
-       
+      
         <h2 class="text-2xl font-semibold mb-4">
         Test Account 
      </h2>
