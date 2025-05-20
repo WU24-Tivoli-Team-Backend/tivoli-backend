@@ -14,6 +14,8 @@ class RuneSeeder extends Seeder
      */
     public function run(): void
     {
+         DB::table('users')->where('email', 'rune@yrgobanken.vip')->delete();
+
         DB::table('users')->insert([
             'name' => 'Rune Pandadottir',
             'email' => 'rune@yrgobanken.vip',
