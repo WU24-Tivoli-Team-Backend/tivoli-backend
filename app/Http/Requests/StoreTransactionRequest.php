@@ -108,8 +108,8 @@ public function withValidator($validator)
         }
 
         // Always pay out a stamp
-        if ($this->filled('payout_amount') && !$this->filled('stamp_id')) {
-            $validator->errors()->add('stamp_id', 'A stamp must be provided when payout amount is given.');
+        if (!$this->filled('stake_amount') && !$this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp must be provided.');
             return;
         }
 
