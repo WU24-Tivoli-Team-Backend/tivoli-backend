@@ -45,18 +45,30 @@ class VoteController extends Controller
     public function store(StoreVoteRequest $request)
     {
         try {
+        $existingVote = Vote::where('user_id', $request->user_id)->first();
+
+        if ($existingVote) {
+            $existingVote->amusement_id = $request->amusement_id;
+            $existingVote->updated_at = now();
+            $existingVote->save();
+
+            return response()->json([
+                'message' => 'Your vote has been updated!',
+                'data' => $existingVote,
+            ], 200);
+        } else {
             $vote = Vote::create($request->validated());
-    
+
             return response()->json([
                 'message' => 'You have submitted your vote!',
-                'data'    => $vote,
+                'data' => $vote,
             ], 201);
-    
+        }
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to submit vote',
-                'error' => $e->getMessage(),
-            ], 500);
+        return response()->json([
+            'message' => 'Failed to submit vote',
+            'error' => $e->getMessage(),
+        ], 500);
         }
     }
 

@@ -32,7 +32,7 @@ class StoreTransactionRequest extends FormRequest
             'amusement_id' => 'required|integer|exists:amusements,id',
             'stake_amount' => 'nullable|numeric',
             'payout_amount' => 'nullable|numeric',
-            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,!null',
+            'stamp_id' => 'nullable|integer|exists:stamps,id|prohibited_if:stake_amount,present',
         ];
     }
 
@@ -51,32 +51,36 @@ class StoreTransactionRequest extends FormRequest
      * @param \Illuminate\Validation\Validator $validator
      * @return void
      */
-   public function withValidator($validator)
+public function withValidator($validator)
 {
     $validator->after(function ($validator) {
         $request = app(Request::class);
         $user = $request->attributes->get('user');
         $group = $request->attributes->get('group');
-        if ( $validator->errors()->has('amusement_id')) {
+        
+        if ($validator->errors()->has('amusement_id')) {
             return;
         }
+        
         // Validation checks only - no database updates
         if ($this->filled('stake_amount') && $this->filled('payout_amount')) {
             $validator->errors()->add('message', 'You cannot provide both stake_amount and payout_amount.');
             return;
-        }  
+        }
+        
+        // Get the amusement first - we'll need it for multiple checks
+        $amusement = Amusement::find($this->amusement_id);
+        
+        if (!$amusement) {
+            $validator->errors()->add('amusement_id', 'Amusement not found.');
+            return;
+        }
 
         // Check if the amusements stamp is correct
+      
         if (!empty($this->stamp_id)) {
-            $amusement = Amusement::find($this->amusement_id);
-
-            if (!$amusement) {
-                $validator->errors()->add('amusement_id', 'Amusement not found.');
-                return;
-            }
-
             if ($amusement->stamp_id !== (int) $this->stamp_id) {
-                $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement’s stamp.');
+                $validator->errors()->add('stamp_id', 'The provided stamp does not match the amusement\'s stamp.');
                 return;
             }
         }
@@ -91,22 +95,26 @@ class StoreTransactionRequest extends FormRequest
             return;
         }
 
+        // When stake amount is provided, do not allow a stamp
+        if ($this->filled('stake_amount') && $this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp cannot be used when stake amount is provided.');
+            return;
+        }
+
         // An attraction can only provide a stamp
         if ($amusement->type === 'attraction' && $this->filled('payout_amount')) {
             $validator->errors()->add('payout_amount', 'An attraction can only provide a stamp.');
             return;
         }
 
-        // When stake amount is provided, validate the user has sufficient balance
-        if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {
-            $validator->errors()->add('stake_amount', 'User balance is too low.');
+        // Always pay out a stamp
+        if (!$this->filled('stake_amount') && !$this->filled('stamp_id')) {
+            $validator->errors()->add('stamp_id', 'A stamp must be provided.');
             return;
         }
+
     });
 }
-               
-
-
 
     /**
      * Handle a failed validation attempt.

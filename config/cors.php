@@ -51,6 +51,7 @@ return [
 
     'allowed_headers' => [
         'Content-Type',
+        'X-API-Key',
         'Authorization',
         'X-Requested-With',
         'Accept',
