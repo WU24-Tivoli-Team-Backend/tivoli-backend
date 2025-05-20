@@ -20,7 +20,7 @@ class RuneSeeder extends Seeder
             'password' => Hash::make('password'), // Use a secure password in production
             'group_id' => 8,
             'balance' => 9999999.99, // Note: Consider using a more realistic value
-            'image_url' => 'https://i.imgur.com/4Ke1v5Y.jpg',
+            'image_url' => null,
             'github' => '',
             'url' => '',
             'created_at' => now(),

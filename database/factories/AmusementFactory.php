@@ -25,7 +25,7 @@ class AmusementFactory extends Factory
             'name' => $this->faker->name(),
             'type'  => $this->faker->randomElement(['attraction', 'game']),
             'description' => $this->faker->text(200),
-            'image_url' => $this->faker->imageUrl(640, 480, 'amusement'),
+            'image_url' => null,
             'url' => $this->faker->url(),
             'stamp_id' => fake()->randomElement(Stamp::pluck('id')),
         ];
