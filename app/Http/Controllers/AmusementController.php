@@ -23,14 +23,14 @@ class AmusementController extends Controller
     {
 
         $groupId = $request->query('group_id');
-    
+
         $query = Amusement::query();
-        
+
         // Only filter by group_id if it's provided
         if ($groupId) {
             $query->where('group_id', $groupId);
         }
-        
+
         $amusements = $query->get();
         return AmusementResource::collection($amusements);
     }
@@ -61,7 +61,7 @@ class AmusementController extends Controller
      */
     public function show(Amusement $amusement)
     {
-        
+
         return response()->json(new AmusementResource($amusement));
     }
 
@@ -72,18 +72,18 @@ class AmusementController extends Controller
     public function update(UpdateAmusementRequest $request, Amusement $amusement)
     {
         $user = Auth::user();
-    
+
         // Check if the amusement belongs to the user's group
         if ($amusement->group_id !== $user->group_id) {
             return response()->json(['message' => 'You do not have permission to update this amusement.'], 403);
         }
-        
+
         // The request is already validated through the UpdateAmusementRequest class
         $validated = $request->validated();
-        
+
         // Update the amusement that was passed as a parameter
         $amusement->update($validated);
-        
+
         return response()->json(['message' => 'Amusement updated successfully.', 'amusement' => new AmusementResource($amusement)]);
     }
 
@@ -92,6 +92,13 @@ class AmusementController extends Controller
      */
     public function destroy(Amusement $amusement)
     {
+        $user = Auth::user();
+
+        // Check if the amusement belongs to the user's group
+        if ($amusement->group_id !== $user->group_id) {
+            return response()->json(['message' => 'You do not have permission to update this amusement.'], 403);
+        }
+
         $amusement->delete();
 
         return response()->json([
