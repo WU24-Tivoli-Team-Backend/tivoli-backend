@@ -27,7 +27,7 @@ class UpdateAmusementRequest extends FormRequest
             'name' => 'sometimes|string|max:255',
             'type' => 'sometimes|string|in:attraction,game,activity',
             'description' => 'sometimes|string|max:1000',
-            'image_url' => 'nullable|url|max:255',
+            'image_url' => 'nullable|string|max:255',
             'url' => 'nullable|url|max:255',
             'stamp_id' => 'nullable|integer|exists:stamps,id',
         ];

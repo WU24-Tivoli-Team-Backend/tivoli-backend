@@ -29,7 +29,7 @@ class StoreAmusementRequest extends FormRequest
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:attraction,game', // Must be one of the defined enum values
             'description' => 'nullable|string|max:1000',
-            'image_url' => 'nullable|url|max:255',
+            'image_url' => 'nullable|string|max:255',
             'url' => 'nullable|url|max:255',
             'stamp_id' => 'nullable|integer|exists:stamps,id',
         ];
