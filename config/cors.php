@@ -26,6 +26,8 @@ return [
         env('FRONTEND_URL', 'http://localhost:3001'),
         rtrim(env('FRONTEND_URL', 'http://localhost:3001'), '/'),
         env('FRONTEND_URL', 'http://localhost:3001') . '/',
+        'http://localhost:5173',
+        'http://localhost:5173',
         'https://tivoli.yrgobanken.vip',
         'https://tivoli.yrgobanken.vip/',
         'https://enter-paneer-game.vercel.app/',
@@ -57,7 +59,7 @@ return [
         'Accept',
         'Origin',
         'X-XSRF-TOKEN',
-        'Cache-control'                  
+        'Cache-control'
     ],
 
     'max_age' => 0,
