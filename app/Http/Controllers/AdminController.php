@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -57,5 +58,11 @@ class AdminController extends Controller
             ->update(['balance' => 25.00]);
             
         return back()->with('success', 'All user balances (except designated test users) have been reset to €25');
+    }
+
+    public function resetVotes()
+    {
+        DB::table('votes')->truncate();
+        return back()->with('success', 'All votes have been reset');
     }
 }

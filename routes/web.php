@@ -21,6 +21,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::post('/reset-balances', [AdminController::class, 'resetBalances'])->name('admin.reset.balances');
+    Route::post('/reset-votes', [AdminController::class, 'resetVotes'])->name('admin.reset.votes');
 });
 
 require __DIR__ . '/auth.php';
