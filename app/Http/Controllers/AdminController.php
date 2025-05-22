@@ -29,6 +29,39 @@ class AdminController extends Controller
         'amusementVotes' => $amusementVotes,
         ]);
     }
+
+    public function showUserStamps()
+    {
+        $userStamps = DB::table('user_stamps')
+        ->leftJoin('users', 'user_stamps.user_id', '=', 'users.id')
+        ->leftJoin('stamps', 'user_stamps.stamp_id', '=', 'stamps.id')
+        ->select(
+            'user_stamps.id', 
+            'user_stamps.user_id',
+            'users.name as user_name', 
+            'stamps.id as stamp_id',
+            DB::raw('CASE 
+                WHEN stamps.premium_attribute IS NOT NULL 
+                THEN CONCAT(stamps.premium_attribute, " ", stamps.animal)
+                ELSE stamps.animal 
+                END as stamp_name'),
+            'user_stamps.created_at'
+        )
+        ->get()
+        ->groupBy('user_id')
+        ->map(function ($stamps, $userId) {
+        return (object) [
+            'user_id' => $userId,
+            'user_name' => $stamps->first()->user_name,
+            'stamps' => $stamps->pluck('stamp_name')->toArray(),
+            'stamp_count' => $stamps->count()
+        ];
+    });
+
+    return view('admin.vp', [
+        'userStamps' => $userStamps,
+    ]);
+    }
     
     public function showLogin()
     {
