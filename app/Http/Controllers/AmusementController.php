@@ -6,6 +6,8 @@ use App\Http\Requests\StoreAmusementRequest;
 use App\Http\Requests\UpdateAmusementRequest;
 use App\Models\Amusement;
 use App\Http\Resources\AmusementResource;
+use App\Models\Group;
+use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Policies\AmusementPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AmusementController extends Controller
 {
@@ -78,13 +81,81 @@ class AmusementController extends Controller
             return response()->json(['message' => 'You do not have permission to update this amusement.'], 403);
         }
 
-        // The request is already validated through the UpdateAmusementRequest class
         $validated = $request->validated();
 
-        // Update the amusement that was passed as a parameter
+        // Save old and updated stamp_id
+        $oldStampId = $amusement->stamp_id ?? null;
+        $newStampId = $validated['stamp_id'] ?? null;
+
         $amusement->update($validated);
 
-        return response()->json(['message' => 'Amusement updated successfully.', 'amusement' => new AmusementResource($amusement)]);
+        if ($oldStampId !== $newStampId) {
+            $this->handleStampChangeTransaction($amusement, $oldStampId, $newStampId);
+        }
+
+        return response()->json([
+            'message' => 'Amusement updated successfully.',
+            'data' => new AmusementResource($amusement),
+        ]);
+    }
+
+    /**
+     * Create two transactions when stamp_id is changed:
+     *  - Payment from the user's group (stake_amount)
+     *  - Payout to the recipient group (payout_amount)
+     */
+    private function handleStampChangeTransaction(Amusement $amusement, ?int $oldStampId, ?int $newStampId)
+    {
+        $totalAmount = 4.00;
+
+        $senderGroup = $amusement->group;
+        $recipientGroupId = 2;  // Our own group
+        $recipientGroup = Group::find($recipientGroupId);
+        $user = Auth::user();
+
+        $usersInGroup = $senderGroup->users;
+
+        if ($usersInGroup->count() > 0) {
+            $amountPerUser = $totalAmount / $usersInGroup->count();
+
+            foreach ($usersInGroup as $groupUser) {
+                $groupUser->balance -= $amountPerUser;
+                $groupUser->save();
+
+                Transaction::create([
+                    'user_id' => $groupUser->id,
+                    'group_id' => $senderGroup->id,
+                    'stake_amount' => $amountPerUser,
+                    'payout_amount' => 0,
+                    'amusement_id' => $amusement->id,
+                    'stamp_id' => $newStampId,
+                ]);
+            }
+        } else {
+            // No users to debit from
+        }
+
+        $recipientUsers = $recipientGroup->users;
+
+        if ($recipientUsers->count() > 0) {
+            $amountPerRecipientUser = $totalAmount / $recipientUsers->count();
+
+            foreach ($recipientUsers as $recipientUser) {
+                $recipientUser->balance += $amountPerRecipientUser;
+                $recipientUser->save();
+
+                Transaction::create([
+                    'user_id' => $recipientUser->id,
+                    'group_id' => $recipientGroup->id,
+                    'stake_amount' => 0,
+                    'payout_amount' => $amountPerRecipientUser,
+                    'amusement_id' => $amusement->id,
+                    'stamp_id' => $newStampId,
+                ]);
+            }
+        } else {
+            // No users to credit to
+        }
     }
 
     /**
