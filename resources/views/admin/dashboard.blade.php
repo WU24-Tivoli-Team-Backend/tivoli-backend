@@ -12,11 +12,39 @@
             
             <form action="{{ route('admin.reset.votes') }}" method="POST" class="mb-4">
                 @csrf
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onclick="return confirm('Are you sure you want to reset all votes?');">
                     Reset All Votes
                 </button>
             </form>
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4">Amusement Votes</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-r text-left">ID</th>
+                                    <th class="py-2 px-4 border-b border-r text-left">Amusement</th>
+                                    <th class="py-2 px-4 border-b text-left">Votes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($amusementVotes as $amusement)
+                            <tr>
+                                <td class="py-2 px-4 border-b border-r">{{ $amusement->id }}</td>
+                                <td class="py-2 px-4 border-b border-r">{{ $amusement->name }}</td>
+                                <td class="py-2 px-4 border-b">{{ $amusement->vote_count }}</td>
+                            </tr>
+                                @empty
+                            <tr>
+                                <td colspan="3" class="py-4 px-4 border-b text-center text-gray-500">No amusements found.</td>
+                            </tr>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+
             <h3 class="text-xl font-semibold mb-4">Reset User Balances</h3>
             <p class="mb-4">Click the button below to reset all user balances to €25 (except for the test user Rune).</p>
             
