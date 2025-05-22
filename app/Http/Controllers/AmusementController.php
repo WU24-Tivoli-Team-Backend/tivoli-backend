@@ -109,7 +109,7 @@ class AmusementController extends Controller
         $totalAmount = 4.00;
 
         $senderGroup = $amusement->group;
-        $recipientGroupId = 2;  // Our own group
+        $recipientGroupId = 1;  // Our own group
         $recipientGroup = Group::find($recipientGroupId);
         $user = Auth::user();
 
