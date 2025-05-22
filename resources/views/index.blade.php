@@ -94,9 +94,11 @@
         <h2 class="text-2xl font-semibold mb-4">
             Yaml
         </h2>
-        <p>
+        <p class="mb-4">
             Here you can download the <strong><a href="/tivoli.yaml" class="text-blue-600 underline hover:text-blue-800" download>yaml</a></strong> file to see all the API endpoints! Go to <strong><a href="https://editor.swagger.io/" class="text-blue-600 underline hover:text-blue-800">Swagger</a></strong> and import the file. Now you should see the Tivoli centralbank API. You only need to post transactions to the API. Follow the code example above to integrate it into your code seamlessly.
         </p>
+        <h2 class="text-2xl font-semibold mb-4">OBS!</h2>
+        <p class="mb-4"> We have discovered a small mistake regarding stamps. Unfortunately, you can only issue a stamp, which is firmly linked to a specific metal and an animal. This means that the possibility of adding a metal to a rammer will not exist. However, you can exchange any stamp you give out when you update your attraction or game, for a cost of $4. That cost is deducted from you and your team members. Have a good time!</p>
 
     </main>
     <footer class="mt-16 py-6 border-t border-gray-200">
