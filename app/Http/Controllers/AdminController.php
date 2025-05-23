@@ -107,7 +107,7 @@ class AdminController extends Controller
 
     public function resetBalances()
     {
-        User::where('email', '!=', 'rune@yrgobanken.vip', 'hans.2.andersson@educ.goteborg.se')
+        User::where('email', '!=', 'rune@yrgobanken.vip')
             ->update(['balance' => 25.00]);
 
         return back()->with('success', 'All user balances (except designated test users) have been reset to €25');
