@@ -24,6 +24,13 @@ Route::prefix('admin')->group(function () {
     Route::post('/reset-balances', [AdminController::class, 'resetBalances'])->name('admin.reset.balances');
     Route::post('/rune-balance', [AdminController::class, 'updateRuneBalance'])->name('admin.update.rune.balance');
     Route::post('/reset-votes', [AdminController::class, 'resetVotes'])->name('admin.reset.votes');
+
+    Route::get('/users', [AdminController::class, 'showUsers'])->name('admin.users.index');
+    Route::get('/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
+    Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
+    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
 });
 
 require __DIR__ . '/auth.php';
