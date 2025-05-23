@@ -16,12 +16,13 @@ class AdminController extends Controller
             return redirect()->route('admin.login');
         }
         
-        $users = User::where('email', '!=', 'rune@yrgobanken.vip')->get();
+        $users = User::where('email', '!=', 'rune@yrgobanken.vip')->orderByDesc('balance')->get();
 
         $amusementVotes = DB::table('amusements')
         ->leftJoin('votes', 'amusements.id', '=', 'votes.amusement_id')
         ->select('amusements.id', 'amusements.name', DB::raw('COUNT(votes.id) as vote_count'))
         ->groupBy('amusements.id', 'amusements.name')
+        ->orderByDesc('vote_count')
         ->get();
 
         return view('admin.dashboard', [
