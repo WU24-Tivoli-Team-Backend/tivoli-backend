@@ -113,18 +113,29 @@ class AdminController extends Controller
         }
 
         $request->validate([
-            'balance' => 'required|numeric|min:0',
+            'rune_balance' => 'required|numeric|min:0',
+            'hans_balance' => 'nullable|numeric|min:0',
         ]);
 
         $rune = User::where('email', 'rune@yrgobanken.vip')->first();
-
-        if ($rune) {
-            $rune->balance = $request->balance;
+        if ($rune && $request->filled('rune_balance')) {
+            $rune->balance = $request->input('rune_balance');
             $rune->save();
-            return redirect()->back()->with('success', 'Rune\'s balance updated successfully.');
+            $messages[] = "Rune's balance updated.";
         }
 
-        return redirect()->back()->with('error', 'Rune not found.');
+        $hans = User::where('email', 'hans.2.andersson@educ.goteborg.se')->first();
+        if ($hans && $request->filled('hans_balance')) {
+            $hans->balance = $request->input('hans_balance');
+            $hans->save();
+            $messages[] = "Hans's balance updated.";
+        }
+
+        if (count($messages)) {
+            return redirect()->back()->with('success', implode(' ', $messages));
+        }
+
+        return redirect()->back()->with('error', 'No updates made. Make sure at least one user exists and a balance was entered.');
     }
 
     public function resetVotes()
