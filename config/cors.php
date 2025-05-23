@@ -45,7 +45,9 @@ return [
         'https://wheel-of-fortune-lilac.vercel.app/',
         'https://wheel-of-fortune-lilac.vercel.app',
         'https://jolor2024.github.io/bingo/',
-        'https://jolor2024.github.io/bingo'
+        'https://jolor2024.github.io/bingo',
+        'https://runehunt.vercel.app/',
+        'https://runehunt.vercel.app',
 
     ],
 
