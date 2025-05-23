@@ -18,6 +18,8 @@ class AdminController extends Controller
         
         $users = User::where('email', '!=', 'rune@yrgobanken.vip')->orderByDesc('balance')->get();
 
+        $rune = User::where('email', 'rune@yrgobanken.vip')->first();
+
         $amusementVotes = DB::table('amusements')
         ->leftJoin('votes', 'amusements.id', '=', 'votes.amusement_id')
         ->select('amusements.id', 'amusements.name', DB::raw('COUNT(votes.id) as vote_count'))
@@ -27,6 +29,7 @@ class AdminController extends Controller
 
         return view('admin.dashboard', [
         'users' => $users,
+        'rune' => $rune,
         'amusementVotes' => $amusementVotes,
         ]);
     }
@@ -101,6 +104,27 @@ class AdminController extends Controller
             ->update(['balance' => 25.00]);
             
         return back()->with('success', 'All user balances (except designated test users) have been reset to €25');
+    }
+
+    public function updateRuneBalance(Request $request)
+    {
+        if (!Session::has('admin_logged_in')) {
+            return redirect()->route('admin.login');
+        }
+
+        $request->validate([
+            'balance' => 'required|numeric|min:0',
+        ]);
+
+        $rune = User::where('email', 'rune@yrgobanken.vip')->first();
+
+        if ($rune) {
+            $rune->balance = $request->balance;
+            $rune->save();
+            return redirect()->back()->with('success', 'Rune\'s balance updated successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Rune not found.');
     }
 
     public function resetVotes()
