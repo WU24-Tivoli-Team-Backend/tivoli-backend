@@ -86,7 +86,6 @@ class StoreTransactionRequest extends FormRequest
 
             // Check balances without modifying them
             $groupUsers = User::where('group_id', $group->id)->get();
-            $groupUserCount = count($groupUsers);
 
             // When stake amount is provided, validate the user has sufficient balance
             if ($this->filled('stake_amount') && $this->stake_amount > $user->balance) {

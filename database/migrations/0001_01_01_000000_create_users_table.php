@@ -17,11 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            // $table->foreignId('group_id')->references('id')->on('groups')->onDelete('cascade')->nullable();
-            // $table->decimal('balance', 10, 2)->default(25.00);
-            // $table->string('image_url')->nullable();
-            // $table->string('github')->nullable();
-            // $table->string('url')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
