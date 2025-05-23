@@ -24,6 +24,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/reset-balances', [AdminController::class, 'resetBalances'])->name('admin.reset.balances');
     Route::post('/rune-balance', [AdminController::class, 'updateRuneBalance'])->name('admin.update.rune.balance');
     Route::post('/reset-votes', [AdminController::class, 'resetVotes'])->name('admin.reset.votes');
+    Route::post('/reset-stamps', [AdminController::class, 'resetStamps'])->name('admin.reset.stamps');
 });
 
 require __DIR__ . '/auth.php';

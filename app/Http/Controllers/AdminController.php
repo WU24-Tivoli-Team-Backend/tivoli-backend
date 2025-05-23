@@ -111,7 +111,6 @@ class AdminController extends Controller
 
     public function updateRuneBalance(Request $request)
     {
-        Log::info('UpdateRuneBalance called', $request->all());
         if (!Session::has('admin_logged_in')) {
             return redirect()->route('admin.login');
         }
@@ -146,5 +145,11 @@ class AdminController extends Controller
     {
         DB::table('votes')->truncate();
         return back()->with('success', 'All votes have been reset');
+    }
+
+    public function resetStamps()
+    {
+        DB::table('user_stamps')->truncate();
+        return back()->with('success', 'All stamps have been reset');
     }
 }
