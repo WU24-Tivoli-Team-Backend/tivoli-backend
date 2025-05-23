@@ -22,6 +22,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/vp', [AdminController::class, 'showUserStamps'])->name('admin.vp');
     Route::post('/reset-balances', [AdminController::class, 'resetBalances'])->name('admin.reset.balances');
+    Route::post('/rune-balance', [AdminController::class, 'updateRuneBalance'])->name('admin.update.rune.balance');
     Route::post('/reset-votes', [AdminController::class, 'resetVotes'])->name('admin.reset.votes');
 });
 
