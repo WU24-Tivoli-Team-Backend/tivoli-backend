@@ -15,7 +15,8 @@
                                     <th class="py-2 px-4 border-b border-r text-left">ID</th>
                                     <th class="py-2 px-4 border-b border-r text-left">User</th>
                                     <th class="py-2 px-4 border-b border-r text-left">Count</th>
-                                    <th class="py-2 px-4 border-b text-left">Stamps</th>
+                                    <th class="py-2 px-4 border-b border-r text-left">Stamps</th>
+                                    <th class="py-2 px-4 border-b text-left">VP</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -24,13 +25,14 @@
                                 <td class="py-2 px-4 border-b border-r">{{ $userStamp->user_id }}</td>
                                 <td class="py-2 px-4 border-b border-r">{{ $userStamp->user_name }}</td>
                                 <td class="py-2 px-4 border-b border-r">{{ $userStamp->stamp_count }}</td>
-                                <td class="py-2 px-4 border-b">
+                                <td class="py-2 px-4 border-b border-r">
                                     <ul class="list-disc list-inside">
                                     @foreach($userStamp->stamps as $stamp)
                                         <li>{{ $stamp }}</li>
                                     @endforeach
                                     </ul>
                                 </td>
+                                <td class="py-2 px-4 border-b">{{ $userStamp->victory_points }}</td>
                             </tr>
                                 @empty
                             <tr>
