@@ -124,6 +124,7 @@
         Update Balances
     </button>
 </form>
+
     </div>
 
     <div class="mt-8">
@@ -148,11 +149,11 @@
                     @foreach([$rune, $hans] as $validUser)
                     @if($validUser)
                     <tr>
-                        <td class="py-2 px-4 border-b border-r">{{ $rune->id }}</td>
-                        <td class="py-2 px-4 border-b border-r">{{ $rune->name }}</td>
-                        <td class="py-2 px-4 border-b border-r">{{ $rune->email }}</td>
-                        <td class="py-2 px-4 border-b border-r">{{ $rune->group_id }}</td>
-                        <td class="py-2 px-4 border-b">€{{ number_format($rune->balance, 2) }}</td>
+                        <td class="py-2 px-4 border-b border-r">{{ $validUser->id }}</td>
+                        <td class="py-2 px-4 border-b border-r">{{ $validUser->name }}</td>
+                        <td class="py-2 px-4 border-b border-r">{{ $validUser->email }}</td>
+                        <td class="py-2 px-4 border-b border-r">{{ $validUser->group_id }}</td>
+                        <td class="py-2 px-4 border-b">€{{ number_format($validUser->balance, 2) }}</td>
                     </tr>
                     @else
                     <tr>
