@@ -26,22 +26,6 @@ class StampController extends Controller
         return StampResource::collection($stamps);
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  */
-    // public function create()
-    // {
-    //     //
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(StoreStampRequest $request)
-    // {
-    //     //
-    // }
-
     /**
      * Display the specified resource.
      */
@@ -51,35 +35,10 @@ class StampController extends Controller
             $stamp = Stamp::findOrFail($id);
 
             return new StampResource($stamp);
-
         } catch (ModelNotFoundException $exception) {
             return response()->json([
                 'message' => 'Stamp not found',
             ], 404);
         }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    // public function edit(Stamp $stamp)
-    // {
-    //     //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    // public function update(UpdateStampRequest $request, Stamp $stamp)
-    // {
-    //     //
-    // }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    // public function destroy(Stamp $stamp)
-    // {
-    //     //
-    // }
 }

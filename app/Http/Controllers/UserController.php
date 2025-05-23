@@ -91,9 +91,6 @@ class UserController extends Controller
         }
     }
 
-
-
-
     // DELETE /api/user (if we want to allow users to delete their own account)
     public function destroySelf(Request $request)
     {

@@ -52,76 +52,76 @@ class TransactionController extends Controller
      * Store a newly created resource in storage.
      */
 
-     public function store(StoreTransactionRequest $request)
-         {
-            $validatedData = $request->validated();
+    public function store(StoreTransactionRequest $request)
+    {
+        $validatedData = $request->validated();
 
-            $user = $request->attributes->get('user');
-            if ($user = $request->attributes->get('user')) {
-                $validatedData['user_id'] = $user->id;
-            }
-            // Second priority: Check Auth if attributes didn't have it
-            else if (Auth::check()) {
-                $validatedData['user_id'] = Auth::id();
-            } 
-            // Fallback: Return an error
-            else {
-                return response()->json(['error' => 'User not authenticated'], 401);
-            }
-
-            $user = User::findOrFail($validatedData['user_id']);
-
-            $amusement = Amusement::findOrFail($validatedData['amusement_id']);
-            $groupId = $amusement->group_id;
-
-            $groupUsers = User::where('group_id', $groupId)->get();
-            $groupUserCount = $groupUsers->count();
-
-            DB::beginTransaction();
-            try {
-                // Create the transaction record first
-                $transaction = Transaction::create($validatedData);
-
-                // Handle stake amount (user pays, group members receive)
-                if (isset($validatedData['stake_amount'])) {
-                    // Deduct from user making the stake
-                    $user->decrement('balance', $validatedData['stake_amount']);
-                    
-                    // Distribute to group members
-                    $amountPerUser = $validatedData['stake_amount'] / $groupUserCount;
-                    foreach ($groupUsers as $groupUser) {
-                        $groupUser->increment('balance', $amountPerUser);
-                    }
-                }
-
-                // Handle payout amount (user receives, group members pay)
-                if (isset($validatedData['payout_amount'])) {
-                    $amountPerUser = $validatedData['payout_amount'] / $groupUserCount;
-
-                    // Deduct from group members
-                    foreach ($groupUsers as $groupUser) {
-                        $groupUser->decrement('balance', $amountPerUser);
-                    }
-
-                    // Add to user receiving the payout
-                    $user->increment('balance', $validatedData['payout_amount']);
-                }
-
-                // Handle stamp on payout (insert into user_stamps table)
-                if (isset($validatedData['stamp_id'])) {
-                    UserStamp::create([
-                        'user_id' => $user->id,
-                        'stamp_id' => $validatedData['stamp_id'],
-                    ]);
-                }
-
-                DB::commit();
-                return response()->json(['message' => 'Transaction created', 'transaction' => $transaction], 201);
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return response()->json(['message' => 'Transaction failed', 'error' => $e->getMessage()], 500);
-            }
+        $user = $request->attributes->get('user');
+        if ($user = $request->attributes->get('user')) {
+            $validatedData['user_id'] = $user->id;
         }
+        // Second priority: Check Auth if attributes didn't have it
+        else if (Auth::check()) {
+            $validatedData['user_id'] = Auth::id();
+        }
+        // Fallback: Return an error
+        else {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        $user = User::findOrFail($validatedData['user_id']);
+
+        $amusement = Amusement::findOrFail($validatedData['amusement_id']);
+        $groupId = $amusement->group_id;
+
+        $groupUsers = User::where('group_id', $groupId)->get();
+        $groupUserCount = $groupUsers->count();
+
+        DB::beginTransaction();
+        try {
+            // Create the transaction record first
+            $transaction = Transaction::create($validatedData);
+
+            // Handle stake amount (user pays, group members receive)
+            if (isset($validatedData['stake_amount'])) {
+                // Deduct from user making the stake
+                $user->decrement('balance', $validatedData['stake_amount']);
+
+                // Distribute to group members
+                $amountPerUser = $validatedData['stake_amount'] / $groupUserCount;
+                foreach ($groupUsers as $groupUser) {
+                    $groupUser->increment('balance', $amountPerUser);
+                }
+            }
+
+            // Handle payout amount (user receives, group members pay)
+            if (isset($validatedData['payout_amount'])) {
+                $amountPerUser = $validatedData['payout_amount'] / $groupUserCount;
+
+                // Deduct from group members
+                foreach ($groupUsers as $groupUser) {
+                    $groupUser->decrement('balance', $amountPerUser);
+                }
+
+                // Add to user receiving the payout
+                $user->increment('balance', $validatedData['payout_amount']);
+            }
+
+            // Handle stamp on payout (insert into user_stamps table)
+            if (isset($validatedData['stamp_id'])) {
+                UserStamp::create([
+                    'user_id' => $user->id,
+                    'stamp_id' => $validatedData['stamp_id'],
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Transaction created', 'transaction' => $transaction], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Transaction failed', 'error' => $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Display the specified resource.
@@ -136,22 +136,6 @@ class TransactionController extends Controller
                 'message' => 'Transaction not found',
             ], 404);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTransactionRequest $request, Transaction $transaction)
-    {
-        //
     }
 
     /**
