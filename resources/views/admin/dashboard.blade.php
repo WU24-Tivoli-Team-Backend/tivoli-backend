@@ -105,17 +105,25 @@
         @endif
 
         <form action="{{ route('admin.update.rune.balance') }}" method="POST"
-            class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-            @csrf
-            <input type="number" name="balance" step="0.01" min="0"
-                placeholder="€0.00"
-                class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required>
-            <button type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Set Rune's Balance
-            </button>
-        </form>
+    class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+    @csrf
+    <div>
+        <label for="rune_balance" class="block text-sm font-medium text-gray-700">Rune</label>
+        <input type="number" name="rune_balance" step="0.01" min="0" placeholder="€0.00"
+            class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+    </div>
+
+    <div>
+        <label for="hans_balance" class="block text-sm font-medium text-gray-700">Hans</label>
+        <input type="number" name="hans_balance" step="0.01" min="0" placeholder="€0.00"
+            class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+    </div>
+
+    <button type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Update Balances
+    </button>
+</form>
     </div>
 
     <div class="mt-8">
@@ -132,7 +140,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($rune)
+                    @php
+                        $rune = \App\Models\User::where('email', 'rune@yrgobanken.vip')->first();
+                        $hans = \App\Models\User::where('email', 'hans.2.andersson@educ.goteborg.se')->first();
+                    @endphp
+                    
+                    @foreach([$rune, $hans] as $validUser)
+                    @if($validUser)
                     <tr>
                         <td class="py-2 px-4 border-b border-r">{{ $rune->id }}</td>
                         <td class="py-2 px-4 border-b border-r">{{ $rune->name }}</td>
@@ -145,6 +159,7 @@
                         <td colspan="5" class="py-4 px-4 border-b text-center text-gray-500">Rune not found.</td>
                     </tr>
                     @endif
+                    @endforeach
                 </tbody>
             </table>
         </div>
