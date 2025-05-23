@@ -1,5 +1,8 @@
 # 🎡 Tivoli Backend  
-**Tivoli Backend** Our backend is a RESTful API that handles authentication, user login, and data transfer between different URLs. The attractions and games, created by others, are hosted in iframes on our site (frontend built in next.js). The API generates a JWT token upon user login to track users as they navigate between URLs. It provides endpoints to manage all transactions and perform CRUD operations. 
+
+**Tivoli Backend** Our backend is a RESTful API that handles authentication, user login, and data transfer between different URLs. The attractions and games, created by others, are hosted in iframes on our site built in next.js. The API generates a JWT token upon user login to track users as they navigate between URLs. It provides endpoints to manage all transactions and perform CRUD operations.
+
+You can find the frontend code on [WU24 Tivoli Team Frontend on GitHub](https://github.com/WU24-Tivoli-Team-Backend/tivoli-frontend).
 
 ## 🧱 Tech Stack  
 - **Framework:** Laravel 12.12.0 with Laravel Breeze API package
