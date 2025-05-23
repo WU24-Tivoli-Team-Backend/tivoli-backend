@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\VictoryPoints;
 
 class AdminController extends Controller
 {
@@ -54,13 +55,15 @@ class AdminController extends Controller
         ->get()
         ->groupBy('user_id')
         ->map(function ($stamps, $userId) {
-        return (object) [
-            'user_id' => $userId,
-            'user_name' => $stamps->first()->user_name,
-            'stamps' => $stamps->pluck('stamp_name')->toArray(),
-            'stamp_count' => $stamps->count()
-        ];
-    });
+            $stampNames = $stamps->pluck('stamp_name')->toArray();
+            return (object) [
+                'user_id' => $userId,
+                'user_name' => $stamps->first()->user_name,
+                'stamps' => $stampNames,
+                'stamp_count' => count($stampNames),
+                'victory_points' => VictoryPoints::calculate($stampNames),
+            ];
+        });
 
     return view('admin.vp', [
         'userStamps' => $userStamps,
