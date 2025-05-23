@@ -13,6 +13,8 @@
             
             @if(Session::has('admin_logged_in'))
                 <div class="flex items-center gap-4">
+                    <a href="{{ route('admin.users.index') }}" 
+                       class="hover:underline">Users</a>
                     <a href="{{ route('admin.vp') }}" 
                        class="hover:underline">VP</a>
                     <a href="{{ route('admin.dashboard') }}" 
